@@ -174,7 +174,7 @@ def IsPictureFile(fileName):
 
 
 def IsUrl(s):
-    urlPatterns = re.compile('^(www\.|https://|http://)', re.I)
+    urlPatterns = re.compile(r'^(www\.|https://|http://)', re.I)
     return urlPatterns.match(s)
 
 
@@ -950,7 +950,7 @@ class AnimatedGif:
         )
         self.isUrl = IsUrl(mediaLocator)
         captureRe = re.findall(
-            '^::capture ([\.0-9]+) ([\.0-9]+) ([0-9]+)x([0-9]+)\+(\-?[0-9]+)\+(\-?[0-9]+) cursor=(\d+) retina=(\d+) web=(\d+)$',
+            r'^::capture ([\.0-9]+) ([\.0-9]+) ([0-9]+)x([0-9]+)\+(\-?[0-9]+)\+(\-?[0-9]+) cursor=(\d+) retina=(\d+) web=(\d+)$',
             mediaLocator,
         )
         isImgSeq = '|' in mediaLocator or IsPictureFile(mediaLocator)
@@ -1849,7 +1849,7 @@ class AnimatedGif:
         )
         self.isUrl = IsUrl(mediaLocator)
         captureRe = re.findall(
-            '^::capture ([\.0-9]+) ([\.0-9]+) ([0-9]+)x([0-9]+)\+(\-?[0-9]+)\+(\-?[0-9]+) cursor=(\d+) retina=(\d+) web=(\d+)$',
+            r'^::capture ([\.0-9]+) ([\.0-9]+) ([0-9]+)x([0-9]+)\+(\-?[0-9]+)\+(\-?[0-9]+) cursor=(\d+) retina=(\d+) web=(\d+)$',
             mediaLocator,
         )
         isImgSeq = '|' in mediaLocator or IsPictureFile(mediaLocator)
@@ -5270,28 +5270,28 @@ class GifApp:
         self.nashvilleAmount.set(100)
         self.blurredAmount.set(100)
 
-        self.isSharpened.trace('w', self.OnEffectsChange)
-        self.sharpenedAmount.trace('w', self.OnEffectsChange)
-        self.isDesaturated.trace('w', self.OnEffectsChange)
-        self.desaturatedAmount.trace('w', self.OnEffectsChange)
-        self.isSepia.trace('w', self.OnEffectsChange)
-        self.sepiaAmount.trace('w', self.OnEffectsChange)
-        self.isColorTint.trace('w', self.OnEffectsChange)
-        self.colorTintAmount.trace('w', self.OnEffectsChange)
-        self.colorTintColor.trace('w', self.OnEffectsChange)
-        self.isFadedEdges.trace('w', self.OnEffectsChange)
-        self.fadedEdgeAmount.trace('w', self.OnEffectsChange)
-        self.isGrayScale.trace('w', self.OnEffectsChange)
-        self.isBordered.trace('w', self.OnEffectsChange)
-        self.borderAmount.trace('w', self.OnEffectsChange)
-        self.borderColor.trace('w', self.OnEffectsChange)
-        self.isCinemagraph.trace('w', self.OnEffectsChange)
-        self.isNashville.trace('w', self.OnEffectsChange)
-        self.nashvilleAmount.trace('w', self.OnEffectsChange)
-        self.isBlurred.trace('w', self.OnEffectsChange)
-        self.blurredAmount.trace('w', self.OnEffectsChange)
-        self.invertCinemagraph.trace('w', self.OnEffectsChange)
-        self.isAudioEnabled.trace('w', self.OnEffectsChange)
+        self.isSharpened.trace_add('write', self.OnEffectsChange)
+        self.sharpenedAmount.trace_add('write', self.OnEffectsChange)
+        self.isDesaturated.trace_add('write', self.OnEffectsChange)
+        self.desaturatedAmount.trace_add('write', self.OnEffectsChange)
+        self.isSepia.trace_add('write', self.OnEffectsChange)
+        self.sepiaAmount.trace_add('write', self.OnEffectsChange)
+        self.isColorTint.trace_add('write', self.OnEffectsChange)
+        self.colorTintAmount.trace_add('write', self.OnEffectsChange)
+        self.colorTintColor.trace_add('write', self.OnEffectsChange)
+        self.isFadedEdges.trace_add('write', self.OnEffectsChange)
+        self.fadedEdgeAmount.trace_add('write', self.OnEffectsChange)
+        self.isGrayScale.trace_add('write', self.OnEffectsChange)
+        self.isBordered.trace_add('write', self.OnEffectsChange)
+        self.borderAmount.trace_add('write', self.OnEffectsChange)
+        self.borderColor.trace_add('write', self.OnEffectsChange)
+        self.isCinemagraph.trace_add('write', self.OnEffectsChange)
+        self.isNashville.trace_add('write', self.OnEffectsChange)
+        self.nashvilleAmount.trace_add('write', self.OnEffectsChange)
+        self.isBlurred.trace_add('write', self.OnEffectsChange)
+        self.blurredAmount.trace_add('write', self.OnEffectsChange)
+        self.invertCinemagraph.trace_add('write', self.OnEffectsChange)
+        self.isAudioEnabled.trace_add('write', self.OnEffectsChange)
 
         self.lblEffects = Label(self.boxTweaks, text='FX & Filters')
         self.btnEditEffects = Button(
@@ -6318,7 +6318,7 @@ class GifApp:
 
         self.cbxCaptionList['values'] = ('[Click here to add a new caption]',)
         self.cbxCaptionList.current(0)
-        self.captionTracer = self.currentCaption.trace('w', self.OnCaptionSelect)
+        self.captionTracer = self.currentCaption.trace_add('write', self.OnCaptionSelect)
 
         for strVar in [self.startTimeHour, self.startTimeMilli]:
             strVar.set(0)
@@ -7063,9 +7063,9 @@ class GifApp:
         multiSelectMode = multiSelect
         rc = True
         errStr = 'Unknown error'
-        urlPatterns = re.compile('^(www\.|https://|http://)')
+        urlPatterns = re.compile(r'^(www\.|https://|http://)')
         capPattern = re.compile(
-            '^::capture ([\.0-9]+) ([\.0-9]+) ([0-9]+)x([0-9]+)\+(\-?[0-9]+)\+(\-?[0-9]+) cursor=(\d) retina=(\d) web=(\d)$'
+            r'^::capture ([\.0-9]+) ([\.0-9]+) ([0-9]+)x([0-9]+)\+(\-?[0-9]+)\+(\-?[0-9]+) cursor=(\d) retina=(\d) web=(\d)$'
         )
         fileName = self.txtFname.get().strip()
 
@@ -8267,7 +8267,7 @@ class GifApp:
         # Attach handlers
         btnImport.configure(command=OnImportClicked)
         sclStartFrame.configure(command=OnSetFramePosition)
-        blankFrame.trace('w', OnToggleBlankFrame)
+        blankFrame.trace_add('write', OnToggleBlankFrame)
 
         return self.WaitForChildDialog(dlg)
 
@@ -8454,11 +8454,11 @@ class GifApp:
         # Attach handlers
         btnOK.configure(command=OnOK)
 
-        cropX.trace('w', OnCropChange)
-        cropY.trace('w', OnCropChange)
-        cropWidth.trace('w', OnCropChange)
-        cropHeight.trace('w', OnCropChange)
-        aspectLock.trace('w', OnCropChange)
+        cropX.trace_add('write', OnCropChange)
+        cropY.trace_add('write', OnCropChange)
+        cropWidth.trace_add('write', OnCropChange)
+        cropHeight.trace_add('write', OnCropChange)
+        aspectLock.trace_add('write', OnCropChange)
 
         OnCropChange(None)
         return self.WaitForChildDialog(dlg)
@@ -9944,17 +9944,17 @@ class GifApp:
         btnOk.configure(command=OnSaveCaption)
         btnCaptionFontColor.configure(command=OnSelectCaptionColor)
 
-        applyFxToText.trace('w', OnFontUpdate)
-        dropShadow.trace('w', OnFontUpdate)
-        outlineThickness.trace('w', OnFontUpdate)
-        opacity.trace('w', OnFontUpdate)
-        fontSize.trace('w', OnFontUpdate)
-        fontFamily.trace('w', OnFontUpdate)
-        fontStyle.trace('w', OnFontUpdate)
-        positioning.trace('w', OnFontUpdate)
-        animateSetting.trace('w', OnFontUpdate)
-        animationType.trace('w', OnFontUpdate)
-        lineSpacing.trace('w', OnFontUpdate)
+        applyFxToText.trace_add('write', OnFontUpdate)
+        dropShadow.trace_add('write', OnFontUpdate)
+        outlineThickness.trace_add('write', OnFontUpdate)
+        opacity.trace_add('write', OnFontUpdate)
+        fontSize.trace_add('write', OnFontUpdate)
+        fontFamily.trace_add('write', OnFontUpdate)
+        fontStyle.trace_add('write', OnFontUpdate)
+        positioning.trace_add('write', OnFontUpdate)
+        animateSetting.trace_add('write', OnFontUpdate)
+        animationType.trace_add('write', OnFontUpdate)
+        lineSpacing.trace_add('write', OnFontUpdate)
 
         OnFontUpdate(None)
 
