@@ -632,7 +632,7 @@ class InstaConfig:
 
     def ReloadFromFile(self):
         self.config = None
-        self.config = SafeConfigParser()
+        self.config = configparser.ConfigParser()
         self.config.read(self.path)
 
     def ParamExists(self, category, key):
@@ -1010,7 +1010,7 @@ class AnimatedGif:
             return filename
 
         # Windows .URL file format is compatible with built-in ConfigParser class.
-        config = RawConfigParser()
+        config = configparser.RawConfigParser()
         try:
             config.read(filename)
         except:
@@ -1531,7 +1531,7 @@ class InstaConfig:
 
     def ReloadFromFile(self):
         self.config = None
-        self.config = SafeConfigParser()
+        self.config = configparser.ConfigParser()
         self.config.read(self.path)
 
     def ParamExists(self, category, key):
@@ -10256,7 +10256,7 @@ def main():
         logging.info('App: [' + exeDir + ']. Home: [' + expanduser('~') + ']')
         logging.info(
             'System Locale: '
-            + str(locale.getdefaultlocale())
+            + str(locale.getlocale())
             + '; Preferred encoding: '
             + locale.getpreferredencoding()
         )
