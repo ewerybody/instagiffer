@@ -1548,7 +1548,6 @@ class InstaConfig:
 
     def GetParam(self, category, key):
         retVal = ''
-        logging.info(sys.platform)
 
         if self.ParamExists(category, key):
             retVal = self.config._sections[category.lower()][key.lower()]
