@@ -33,22 +33,6 @@
 
 """instagiffer.py: The easy way to make GIFs"""
 
-# Only use odd-numbered minor revisions for pre-release builds
-INSTAGIFFER_VERSION = '1.77'
-# If not a pre-release set to "", else set to "pre-X"
-INSTAGIFFER_PRERELEASE = ''
-
-__author__ = 'Justin Todd'
-__copyright__ = 'Copyright 2013-2019, Exhale Software Inc.'
-__maintainer__ = 'Justin Todd'
-__email__ = 'instagiffer@gmail.com'
-__imgurcid__ = '58fc34d08ab311d'
-__status__ = 'Production'
-__version__ = INSTAGIFFER_VERSION + INSTAGIFFER_PRERELEASE
-__release__ = True  # If this is false, bindep output, and info-level statements will be displayed stdout
-__changelogUrl__ = 'http://instagiffer.com/post/146636589471/instagiffer-175-macpc'
-__faqUrl__ = 'http://www.instagiffer.com/post/51787746324/frequently-asked-questions'
-
 import hashlib
 import argparse
 import base64
@@ -70,11 +54,12 @@ import locale
 import shlex
 import traceback
 import codecs
+# from   ConfigParser import SafeConfigParser, RawConfigParser
+import configparser
+
 from random import randrange
 from os.path import expanduser
 
-# from   ConfigParser import SafeConfigParser, RawConfigParser
-from configparser import SafeConfigParser, RawConfigParser
 from threading import Thread
 from queue import Queue, Empty
 from math import gcd
@@ -105,29 +90,37 @@ if sys.platform == 'win32':
     # Windows uses the PIL ImageGrab module for screen capture
     from PIL import ImageGrab
 
-# Return true if running on a MAC
-#
+
+# Only use odd-numbered minor revisions for pre-release builds
+INSTAGIFFER_VERSION = '1.77'
+# If not a pre-release set to "", else set to "pre-X"
+INSTAGIFFER_PRERELEASE = ''
+
+__author__ = 'Justin Todd'
+__copyright__ = 'Copyright 2013-2019, Exhale Software Inc.'
+__maintainer__ = 'Justin Todd'
+__email__ = 'instagiffer@gmail.com'
+__imgurcid__ = '58fc34d08ab311d'
+__status__ = 'Production'
+__version__ = INSTAGIFFER_VERSION + INSTAGIFFER_PRERELEASE
+__release__ = False  # If this is false, bindep output, and info-level statements will be displayed stdout
+__changelogUrl__ = 'http://instagiffer.com/post/146636589471/instagiffer-175-macpc'
+__faqUrl__ = 'http://www.instagiffer.com/post/51787746324/frequently-asked-questions'
+
 
 
 def ImAMac():
+    """Return true if running on a MAC."""
     return sys.platform == 'darwin'
 
 
-#
-# Return true if running on a PC
-#
-
-
 def ImAPC():
+    """Return true if running on a PC."""
     return sys.platform == 'win32'
 
 
-#
-# Open a file in the application associated with this file extension
-#
-
-
 def OpenFileWithDefaultApp(fileName):
+    """Open a file in the application associated with this file extension."""
     if sys.platform == 'darwin':
         os.system('open ' + fileName)
     else:
@@ -1461,12 +1454,14 @@ def CreateWorkingDir(conf):
         )
         tempDir = GetFailSafeDir(conf, tempDir)
 
+    if os.path.isdir(tempDir):
+        return tempDir
+
     # Try to create temp directory
+    os.makedirs(tempDir)
     if not os.path.exists(tempDir):
-        os.makedirs(tempDir)
-        if not os.path.exists(tempDir):
-            logging.error('Failed to create working directory: ' + tempDir)
-            return ''
+        logging.error('Failed to create working directory: ' + tempDir)
+        return ''
 
     logging.info('Working directory created: ' + tempDir)
     return tempDir
@@ -1584,7 +1579,7 @@ class InstaConfig:
 
         if isinstance(val, int):
             boolVal = not (val == 0)
-        elif val == None:
+        elif val is None:
             boolVal = False
         elif val == '':
             boolVal = False
@@ -2154,10 +2149,11 @@ class AnimatedGif:
         else:
             fontCacheDir = '.cache/fontconfig'
 
-            if not os.path.exists(fontCacheDir):
+            if not os.path.isdir(fontCacheDir):
                 NotifyUser(
                     'First Time',
-                    'Welcome to Instagiffer for Mac! Before you can use text features, I need to build a font database. This will take a few minutes.',
+                    'Welcome to Instagiffer for Windows! Before you can use text features, '
+                    'I need to build a font database. This will take a few minutes.',
                 )
                 logging.info(
                     'First run. Need to build font cache first: ' + fontCacheDir
@@ -7115,7 +7111,7 @@ class GifApp:
             if fileNames is None:
                 return False
 
-            if type(fileNames) is not tuple:
+            if not isinstance(fileNames, tuple):
                 fileList = [fileNames]
             else:
                 fileList = list(fileNames)
