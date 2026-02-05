@@ -11,13 +11,13 @@ import configparser
 from threading import Thread
 from queue import Queue
 
-__release__ = False
+__release__ = True
 IM_A_MAC = sys.platform == 'darwin'
 IM_A_PC = sys.platform == 'win32'
 IM_LINUX = sys.platform == 'linux'
 ON_POSIX = 'posix' in sys.builtin_module_names
 # Only use odd-numbered minor revisions for pre-release builds
-INSTAGIFFER_VERSION = '1.77'
+INSTAGIFFER_VERSION = '1.8'
 # If not a pre-release set to "", else set to "pre-X"
 INSTAGIFFER_PRERELEASE = ''
 __version__ = INSTAGIFFER_VERSION + INSTAGIFFER_PRERELEASE
