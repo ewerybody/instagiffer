@@ -37,7 +37,7 @@ def notify_user(title, msg):
     return tkinter.messagebox.showinfo(title, msg)
 
 
-class GifPlayerWidget(ttk.Label):
+class GifPlayerWidget(tkinter.Label):
     """Tkinter widget that plays a gif."""
 
     def __init__(
@@ -55,7 +55,9 @@ class GifPlayerWidget(ttk.Label):
 
         self.LoadImages(False)
 
-        tkinter.Label(master, image=self.frames[0], padx=10, pady=10)
+        # tkinter.Label(master, image=self.frames[0], padx=10, pady=10)
+        super().__init__(image=self.frames[0], padx=10, pady=10)
+
         self.idx = 0
         self.cancel = self.after(self.delay, self.Play)
 
@@ -212,8 +214,8 @@ class GifApp:
         if IM_A_PC:
             self.parent.wm_iconbitmap('instagiffer.ico')
 
-        frame = ttk.Frame(parent)
-        frame.pack()
+        frame = tkinter.Frame(parent)
+        frame.grid()
         self.mainFrame = frame
 
         self.parent.resizable(width=tkinter.FALSE, height=tkinter.FALSE)
@@ -416,10 +418,10 @@ class GifApp:
 
         padding = 2
 
-        self.status = tkinter.Label(
-            parent, text='', bd=1, relief=tkinter.SUNKEN, anchor=tkinter.W
+        self.status = tkinter.Label(parent, text='', bd=1, relief=tkinter.SUNKEN, anchor=tkinter.W)
+        self.status.grid(
+            # side=tkinter.BOTTOM, fill=tkinter.X
         )
-        self.status.pack(side=tkinter.BOTTOM, fill=tkinter.X)
 
         # Progress bar
         #######################################################################
@@ -435,7 +437,9 @@ class GifApp:
             mode='determinate',
             name='progressBar',
         )  # , style="red.Horizontal.TProgressbar")
-        self.progressBar.pack(side=tkinter.BOTTOM, fill=tkinter.X)
+        self.progressBar.grid(
+            # side=tkinter.BOTTOM, fill=tkinter.X
+        )
         self.showProgress = False
         self.progressBarPosition = tkinter.IntVar()
         self.progressBar['variable'] = self.progressBarPosition
@@ -1270,11 +1274,11 @@ class GifApp:
         if self.gif is None:
             return False
 
-        if len(newFormat) == 0:
-            newFormat = 'gif'
+        if not newFormat:
+            newFormat = igf_paths.EXT_GIF
 
-        fname, fext = os.path.splitext(self.gif.GetNextOutputPath())
-        return self.OnSetSaveLocation(fname + '.' + newFormat)
+        fname = os.path.splitext(self.gif.GetNextOutputPath())[0]
+        return self.OnSetSaveLocation(f'{fname}{newFormat}')
 
     def OnSetSaveLocation(self, location=None):
         if location is None:
@@ -1313,7 +1317,6 @@ class GifApp:
         ret = None
         imgurErrorTitle = 'Imgur Upload Failed'
         imgurUploadSizeLimit = 2 * 1024 * 1024
-        imgurFormat = 'gif'
 
         if self.gif is None or not self.gif.GifExists():
             self.Alert(
@@ -1321,14 +1324,13 @@ class GifApp:
                 "You haven't created your GIF yet. Just go ahead and click 'Create Gif' then try this again.",
             )
             return False
-        elif self.gif.GetFinalOutputFormat() != imgurFormat:
-            self.Alert(imgurErrorTitle, 'File format must be %s!' % (imgurFormat))
+        elif self.gif.GetFinalOutputFormat() != igf_paths.EXT_GIF:
+            self.Alert(imgurErrorTitle, f"File format must be '{igf_paths.EXT_GIF}'!")
             return False
         elif self.gif.GetSize() >= imgurUploadSizeLimit:
             self.Alert(
                 imgurErrorTitle,
-                'File size must be under %d MB!'
-                % (imgurUploadSizeLimit / (1024 * 1024)),
+                f'File size must be under {imgurUploadSizeLimit / (1024 * 1024)} MB!',
             )
             return False
 
@@ -5939,7 +5941,7 @@ class ToolTip(object):
             borderwidth=1,
             font=('tahoma', '8', 'normal'),
         )
-        label.pack(ipadx=1)
+        label.grid(ipadx=1)
 
     def makevisable(self):
         if self.tipwindow is not None:
