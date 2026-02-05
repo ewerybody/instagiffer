@@ -1224,9 +1224,9 @@ class AnimatedGif:
         except Exception:
             return None
 
-        response = json.loads(response.decode('utf-8'))
+        response = json.loads(response.read().decode('utf-8'))
 
-        imgUrl = str(response['data']['link'])
+        imgUrl = response['data']['link']
         logging.info('Imgur URL: ' + imgUrl)
 
         if self.rootWindow is not None:
@@ -1236,7 +1236,7 @@ class AnimatedGif:
         return imgUrl
 
     def GetMaskFileName(self, maskIdx):
-        return '%simage%04d.png' % (self.maskDir + os.sep, maskIdx + 1)
+        return f'{self.maskDir}{os.sep}image{maskIdx + 1:04d}.png'
 
     def DeleteMaskImages(self):
         files = glob.glob(self.maskDir + os.sep + '*')
