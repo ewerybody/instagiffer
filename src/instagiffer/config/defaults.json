@@ -1,0 +1,45 @@
+{
+  "paths": {
+    "working_dir": null,
+    "gif_output_path": "~/instagiffer_output/insta.gif",
+    "fail_safe_dir": null
+  },
+  "video": {
+    "fps": 15.0,
+    "quality": 85,
+    "max_width": 800,
+    "max_height": 600,
+    "maintain_aspect_ratio": true
+  },
+  "gif": {
+    "max_file_size_mb": 1.0,
+    "loop_count": 0,
+    "optimize": true,
+    "dither": "floyd_steinberg",
+    "colors": 256
+  },
+  "effects": {
+    "blur_radius": 0.0,
+    "brightness": 1.0,
+    "contrast": 1.0,
+    "saturation": 1.0,
+    "grayscale": false,
+    "sepia": false
+  },
+  "text": {
+    "enabled": false,
+    "text": "",
+    "font_family": "Arial",
+    "font_size": 24,
+    "color": "#FFFFFF",
+    "position": "bottom",
+    "background_alpha": 0.5
+  },
+  "settings": {
+    "overwrite_gif": true,
+    "auto_play_preview": true,
+    "show_advanced_options": false,
+    "theme": "system",
+    "log_level": "INFO"
+  }
+}
