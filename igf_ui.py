@@ -1,30 +1,29 @@
-import os
-import re
-import sys
-import time
-import shlex
-import shutil
 import locale
 import logging
+import os
+import re
+import shlex
+import shutil
 import subprocess
-import traceback
-
-import PIL.Image
-import PIL.ImageTk
-import PIL.ImageDraw
-import PIL.ImageFilter
-
+import sys
+import time
+import tkinter
+import tkinter.colorchooser
+import tkinter.filedialog
+import tkinter.font
 import tkinter.messagebox
+import traceback
 from tkinter import ttk
 
-import tkinter
-import tkinter.font
-import tkinter.filedialog
+import PIL.Image
+import PIL.ImageDraw
+import PIL.ImageFilter
+import PIL.ImageTk
 
-import igf_paths
 import igf_animgif
 import igf_common
-from igf_common import IM_A_PC, IM_A_MAC, re_scale, __version__, __release__
+import igf_paths
+from igf_common import IM_A_MAC, IM_A_PC, __release__, __version__, re_scale
 
 if IM_A_PC:
     import winsound
@@ -68,7 +67,7 @@ class GifPlayerWidget(tkinter.Label):
 
     def GetInfo(self):
         width, height = self.images[0].size
-        return 'Dimensions: %dx%d' % (width, height)
+        return f'Dimensions: {width}x{height}'
 
     def Stop(self):
         audio_play(None)
@@ -1586,8 +1585,8 @@ class GifApp:
                     % (self.thumbNailsUpdatedTs, framesOnDiskTs)
                 )
                 self.thumbNailsUpdatedTs = -1
-                newThumbCache = dict()
-                self.thumbNailCache = dict()  # erase cache
+                newThumbCache = {}
+                self.thumbNailCache = {}  # erase cache
 
                 self.SetStatus('Updating thumbnail previews...')
 
@@ -1599,10 +1598,9 @@ class GifApp:
                             (int(px2 - px) + 1, int(py2 - py) + 1),
                             PIL.Image.Resampling.NEAREST,
                         )
-                    except IOError:
+                    except OSError:
                         logging.error(
-                            'Unable to generate thumbnail for %s. Image does not exist'
-                            % (thumbPath)
+                            f'Unable to generate thumbnail for {thumbPath}. Image does not exist'
                         )
                         self.thumbNailsUpdatedTs = -2
                         return
@@ -1616,9 +1614,7 @@ class GifApp:
             try:
                 img = self.thumbNailCache[imgPath]
             except Exception:
-                logging.error(
-                    'Thumbnail cache miss: %s. Marking thumbnail cache as stale' % imgPath
-                )
+                logging.error(f'Thumbnail cache miss: {imgPath}. Marking thumbnail cache as stale')
                 self.thumbNailsUpdatedTs = -3
                 return
         #
@@ -5015,7 +5011,7 @@ class GifApp:
             return ret
 
         def OnSelectTintColor():
-            (colorRgb, colorHex) = askcolor(
+            (colorRgb, colorHex) = tkinter.colorchooser.askcolor(
                 parent=self.parent,
                 initialcolor=self.colorTintColor.get(),
                 title='Choose Tint Color',
@@ -5024,7 +5020,7 @@ class GifApp:
             return True
 
         def OnSelectBorderColor():
-            (colorRgb, colorHex) = askcolor(
+            (colorRgb, colorHex) = tkinter.colorchooser.askcolor(
                 parent=self.parent,
                 initialcolor=self.borderColor.get(),
                 title='Choose Border Color',
@@ -5433,7 +5429,7 @@ class GifApp:
             return True
 
         def OnSelectCaptionColor():
-            (colorRgb, colorHex) = askcolor(
+            (colorRgb, colorHex) = tkinter.colorchooser.askcolor(
                 parent=self.parent,
                 initialcolor=lblFontPreview['fg'],
                 title='Choose Caption Color',

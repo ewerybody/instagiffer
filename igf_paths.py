@@ -1,19 +1,17 @@
+import locale
+import logging
 import os
 import re
 import sys
-import locale
-import logging
 
-from igf_common import IM_A_PC, IM_A_MAC
+from igf_common import IM_A_MAC, IM_A_PC
+
 if IM_A_PC:
     import win32api  # ty:ignore[unresolved-import]
 
 import tkinter.messagebox
 
-
-RE_PATTERNS: dict[str, str] = {
-    'url': r'^(www\.|https://|http://)'
-}
+RE_PATTERNS: dict[str, str] = {'url': r'^(www\.|https://|http://)'}
 _RE_PATTERNS: dict[str, re.Pattern] = {}
 EXT_IMAGE = '.jpeg', '.jpg', '.png', '.bmp', '.tif.tga'
 EXT_GIF = '.gif'
@@ -107,10 +105,7 @@ def create_working_dir(conf):
     try:
         temp_dir.encode(locale.getpreferredencoding())
     except UnicodeError:
-        logging.info(
-            'Users home directory is problematic due to non-latin characters: '
-            + temp_dir
-        )
+        logging.info('Users home directory is problematic due to non-latin characters: ' + temp_dir)
         temp_dir = get_fail_safe_dir(conf, temp_dir)
 
     if os.path.isdir(temp_dir):

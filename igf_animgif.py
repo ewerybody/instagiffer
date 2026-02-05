@@ -1,26 +1,26 @@
-import os
-import re
-import glob
-import json
-import math
-import time
-import uuid
 import base64
-import random
-import locale
-import shutil
-import logging
-import hashlib
-import traceback
-import subprocess
 import configparser
+import glob
+import hashlib
+import json
+import locale
+import logging
+import math
+import os
+import random
+import re
+import shutil
+import subprocess
+import time
+import traceback
+import uuid
 
 import PIL.Image
 import PIL.ImageDraw
 
-import igf_paths
 import igf_common
-from igf_common import IM_A_PC, IM_A_MAC, run_process, re_scale, __release__
+import igf_paths
+from igf_common import IM_A_MAC, IM_A_PC, __release__, re_scale, run_process
 
 if IM_A_PC:
     # Windows uses the PIL ImageGrab module for screen capture
@@ -1016,7 +1016,7 @@ class AnimatedGif:
                 origFiles = self.GetExtractedImageList()
                 f = self.GetResizedImagesDir() + os.path.basename(origFiles[idx - 1])
                 return f
-                # doesn't handle deleted frames - DOESNT WORK
+                # doesn't handle deleted frames - DOESN'T WORK
                 # imageName = "image%04d.png" % (idx)
                 # if imageName in f:
                 #     return f
@@ -1042,7 +1042,7 @@ class AnimatedGif:
             try:
                 os.remove(f)
             except Exception:  # WindowsError:
-                logging.error("Can't delete %s" % (f))
+                logging.error(f"Can't delete {f}")
 
     def GetExtractedImagesDir(self):
         return self.frameDir + os.sep
@@ -1559,17 +1559,17 @@ class AnimatedGif:
                 self.callback(False)
                 # logging.info("Deglitch: Removed " + framePath)
 
-            # renumerate after de-glitch
+            # re-numerate after de-glitch
             if not self.ReEnumerateExtractedFrames():
                 self.FatalError('Failed to re-enumerate frames')
 
-        # This command can take a while. Is it even neccesary?
+        # This command can take a while. Is it even necessary?
         # self.CopyFramesToResizeFolder()
         return True
 
     def CheckDuplicates(self, cull=False):
         dupCount = 0
-        hashes = dict()
+        hashes = {}
 
         for imgPath in self.GetExtractedImageList():
             self.callback(False)
@@ -1715,12 +1715,12 @@ class AnimatedGif:
             tri = tri + tri[::-1][1:-1]
             rnd = []
 
-            for x in range(0, 50):
+            for _ in range(0, 50):
                 rnd.append(random.randint(0, 100) / 100.0)
 
             totalTextFrames = 1 + toFrame - fromFrame
 
-            patternEnv = list()
+            patternEnv = []
             if 'triangle' in animationEnvelopeName:
                 patternEnv = tri
             elif 'square' in animationEnvelopeName:
@@ -1932,17 +1932,16 @@ class AnimatedGif:
                 if self.conf.GetParamBool('blend', 'cinemagraphInvert'):
                     negation = ' +negate '
 
-                if os.path.exists(maskFile):
+                if os.path.isfile(maskFile):
                     cmdResize += (
-                        ' ( "%s" -resize %dx%d!  ( "%s" %s ) -alpha off -compose copy_opacity -composite ) -compose over -composite '
-                        % (keyframeFile, origWidth, origHeight, maskFile, negation)
+                        f' ( "{keyframeFile}" -resize {origWidth}x{origHeight}! ( "{maskFile}" {negation} ) '
+                        '-alpha off -compose copy_opacity -composite ) -compose over -composite '
                     )
-
                     # Transparent cinemagraphs
                     if self.conf.GetParamBool('blend', 'cinemagraphUseTransparency'):
                         cmdResize += (
-                            ' ( ( "%s" %s ) -fill black -fuzz 0%% +opaque "#ffffff" -negate -transparent black -negate ) -compose copy_opacity -composite '
-                            % (maskFile, negation)
+                            f' ( ( "{maskFile}" {negation} ) -fill black -fuzz 0%% +opaque "#ffffff" '
+                            '-negate -transparent black -negate ) -compose copy_opacity -composite '
                         )
 
             #

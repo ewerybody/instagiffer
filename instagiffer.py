@@ -30,21 +30,14 @@
 #
 ###############################################################################
 
-"""instagiffer."""
-
-import os
-import sys
-import os
-import sys
-
-# import argparse
 import logging
+import os
+import sys
 
-import igf_paths
 import igf_animgif
 import igf_common
-from igf_common import IM_A_PC, IM_A_MAC, __release__
-
+import igf_paths
+from igf_common import IM_A_MAC, IM_A_PC, __release__
 
 __author__ = 'Justin Todd'
 __copyright__ = 'Copyright 2013-2019, Exhale Software Inc.'
@@ -82,7 +75,7 @@ class InstaCommandLine:
     def GetVideoPath(self):
         if self.videoFileName is not None:
             logging.info('File specified on command line: ' + self.videoFileName)
-            logging.info('File exists: %d' % (os.path.exists(self.videoFileName)))
+            logging.info(f'File exists: {os.path.exists(self.videoFileName)}')
             return self.videoFileName
         else:
             return None
