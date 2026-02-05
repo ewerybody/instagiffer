@@ -1,5 +1,4 @@
 # /usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2013-2019 Exhale Software Inc.
 # All rights reserved.
@@ -32,6 +31,7 @@
 ###############################################################################
 
 """instagiffer."""
+
 import os
 import sys
 import os
@@ -131,9 +131,7 @@ def main():
 
         # Now that Insta is loaded with a bundled Python version, we want
         # to make sure that YouTube-dl to use the built-in Python
-        os.environ['PYTHONHOME'] = (
-            '/System/Library/Frameworks/Python.framework/Versions/Current'
-        )
+        os.environ['PYTHONHOME'] = '/System/Library/Frameworks/Python.framework/Versions/Current'
 
     # File logging options
     try:
