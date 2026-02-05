@@ -19,7 +19,7 @@ ON_POSIX = 'posix' in sys.builtin_module_names
 # Only use odd-numbered minor revisions for pre-release builds
 INSTAGIFFER_VERSION = '1.8'
 # If not a pre-release set to "", else set to "pre-X"
-INSTAGIFFER_PRERELEASE = ''
+INSTAGIFFER_PRERELEASE = 'pre-1'
 __version__ = INSTAGIFFER_VERSION + INSTAGIFFER_PRERELEASE
 __changelogUrl__ = 'http://instagiffer.com/post/146636589471/instagiffer-175-macpc'
 __faqUrl__ = 'http://www.instagiffer.com/post/51787746324/frequently-asked-questions'
@@ -180,25 +180,19 @@ def default_output_handler(stdoutLines, stderrLines, cmd):
             outData = ' '.join('"{0}"'.format(arg) for arg in outData)
 
         # youtube dl
-        youtubeDlSearch = re.search(
-            r'\[download\]\s+([0-9\.]+)% of', outData, re.MULTILINE
-        )
+        youtubeDlSearch = re.search(r'\[download\]\s+([0-9\.]+)% of', outData, re.MULTILINE)
         if youtubeDlSearch:
             i = int(float(youtubeDlSearch.group(1)))
             s = 'Downloaded %d%%...' % (i)
 
         # ffmpeg frame extraction progress
-        ffmpegSearch = re.search(
-            r'frame=.+time=(\d+:\d+:\d+\.\d+)', outData, re.MULTILINE
-        )
+        ffmpegSearch = re.search(r'frame=.+time=(\d+:\d+:\d+\.\d+)', outData, re.MULTILINE)
         if ffmpegSearch:
             secs = duration_str_to_milliseconds(ffmpegSearch.group(1))
             s = 'Extracted %.1f seconds...' % (secs / 1000.0)
 
         # imagemagick - figure out what we're doing based on comments
-        imSearch = re.search(
-            r'^".+(convert\.exe|convert)".+-comment"? "([^"]+):(\d+)"', outData
-        )
+        imSearch = re.search(r'^".+(convert\.exe|convert)".+-comment"? "([^"]+):(\d+)"', outData)
         if imSearch:
             n = int(imSearch.group(3))
 
@@ -328,9 +322,7 @@ def run_process(
         if pipe.poll() is not None:
             break
 
-        time.sleep(
-            0.1
-        )  # Polling frequency. Lengthening this will decrease responsiveness
+        time.sleep(0.1)  # Polling frequency. Lengthening this will decrease responsiveness
 
     # Notify callback of exit. Check callballFinalize so we don't prematurely reset the progress bar
     if callback is not None and callBackFinalize is True:
@@ -383,9 +375,9 @@ def duration_str_to_milliseconds(str, throw_parse_error=False):
 
     r = re.compile('[^0-9]+')
     tokens = r.split(str)
-    vid_len = (
-        (int(tokens[0]) * 3600) + (int(tokens[1]) * 60) + (int(tokens[2]))
-    ) * 1000 + int(tokens[3])
+    vid_len = ((int(tokens[0]) * 3600) + (int(tokens[1]) * 60) + (int(tokens[2]))) * 1000 + int(
+        tokens[3]
+    )
     return vid_len
 
 

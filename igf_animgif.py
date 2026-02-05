@@ -39,7 +39,9 @@ class AnimatedGif:
     description = 'Animated Gif Engine'
     author = 'Justin Todd'
 
-    def __init__(self, config: igf_common.InstaConfig, mediaLocator, workDir, periodicCallback, rootWindow):
+    def __init__(
+        self, config: igf_common.InstaConfig, mediaLocator, workDir, periodicCallback, rootWindow
+    ):
         self.conf = config
         self.workDir = workDir
         self.callback = periodicCallback
@@ -93,8 +95,7 @@ class AnimatedGif:
             os.makedirs(os.path.dirname(self.gifOutPath))
             if not os.path.exists(os.path.dirname(self.gifOutPath)):
                 self.FatalError(
-                    'Failed to create gif output directory: '
-                    + os.path.dirname(self.gifOutPath)
+                    'Failed to create gif output directory: ' + os.path.dirname(self.gifOutPath)
                 )
         if not os.path.exists(self.frameDir):
             os.makedirs(self.frameDir)
@@ -107,21 +108,15 @@ class AnimatedGif:
         if not os.path.exists(self.processedDir):
             os.makedirs(self.processedDir)
             if not os.path.exists(self.processedDir):
-                self.FatalError(
-                    'Failed to create working directory: ' + self.processedDir
-                )
+                self.FatalError('Failed to create working directory: ' + self.processedDir)
         if not os.path.exists(self.downloadDir):
             os.makedirs(self.downloadDir)
             if not os.path.exists(self.downloadDir):
-                self.FatalError(
-                    'Failed to create working directory: ' + self.downloadDir
-                )
+                self.FatalError('Failed to create working directory: ' + self.downloadDir)
         if not os.path.exists(self.captureDir):
             os.makedirs(self.captureDir)
             if not os.path.exists(self.captureDir):
-                self.FatalError(
-                    'Failed to create working directory: ' + self.captureDir
-                )
+                self.FatalError('Failed to create working directory: ' + self.captureDir)
         if not os.path.exists(self.maskDir):
             os.makedirs(self.maskDir)
             if not os.path.exists(self.maskDir):
@@ -146,9 +141,7 @@ class AnimatedGif:
 
         mediaLocator = self.ResolveUrlShortcutFile(mediaLocator)
 
-        logging.info(
-            'Analyzing the media path to determine what kind of video this is...'
-        )
+        logging.info('Analyzing the media path to determine what kind of video this is...')
         self.isUrl = igf_paths.is_url(mediaLocator)
         captureRe = re.findall(CAPTURE_RE, mediaLocator)
         isImgSeq = '|' in mediaLocator or igf_paths.is_picture_file(mediaLocator)
@@ -226,9 +219,7 @@ class AnimatedGif:
     def GetConfig(self) -> igf_common.InstaConfig:
         return self.conf
 
-    def Capture(
-        self, seconds, targetFps, width, height, x, y, showCursor, retinaDisplay, web
-    ):
+    def Capture(self, seconds, targetFps, width, height, x, y, showCursor, retinaDisplay, web):
         if seconds < 1:
             return False
 
@@ -289,12 +280,7 @@ class AnimatedGif:
                     # Get mouse cursor position
                     cursorX, cursorY = self.rootWindow.winfo_pointerxy()
 
-                    if (
-                        cursorX > x
-                        and cursorX < x + width
-                        and cursorY > y
-                        and cursorY < y + height
-                    ):
+                    if cursorX > x and cursorX < x + width and cursorY > y and cursorY < y + height:
                         # Draw Cursor (Just a dot for now)
                         r = 2  # radius
                         draw = PIL.ImageDraw.Draw(img)
@@ -352,17 +338,14 @@ class AnimatedGif:
                         frameCount += 1
                     else:
                         logging.error(
-                            'Capture file '
-                            + capPath
-                            + ' was not saved to disk for some reason'
+                            'Capture file ' + capPath + ' was not saved to disk for some reason'
                         )
 
                 # Trim the list to the actual size
                 missingCount = len(self.imageSequence) - frameCount
                 if missingCount != 0:
                     logging.error(
-                        'Not all capture files were accounted for: %d missing '
-                        % (missingCount)
+                        'Not all capture files were accounted for: %d missing ' % (missingCount)
                     )
                     self.imageSequence = self.imageSequence[
                         0 : min(frameCount, len(self.imageSequence))
@@ -412,9 +395,7 @@ class AnimatedGif:
             return False
 
         if not os.access(os.path.dirname(self.gifOutPath), os.W_OK):
-            logging.error(
-                'Warning. ' + os.path.dirname(self.gifOutPath) + ' is not writable'
-            )
+            logging.error('Warning. ' + os.path.dirname(self.gifOutPath) + ' is not writable')
 
         if not os.path.exists(self.conf.GetParam('paths', 'ffmpeg')):
             self.FatalError('ffmpeg not found')
@@ -446,16 +427,16 @@ class AnimatedGif:
         import igf_ui
 
         if IM_A_MAC:
-            fontCacheDir = './macdeps/im/var/cache/fontconfig'  # expanduser("~") + '/.cache/fontconfig'
+            fontCacheDir = (
+                './macdeps/im/var/cache/fontconfig'  # expanduser("~") + '/.cache/fontconfig'
+            )
 
             if not os.path.isdir(fontCacheDir):
                 igf_ui.notify_user(
                     'First Time',
                     'Welcome to Instagiffer for Mac! Before you can use text features, I need to build a font database. This will take a few minutes.',
                 )
-                logging.info(
-                    'First run. Need to build font cache first: ' + fontCacheDir
-                )
+                logging.info('First run. Need to build font cache first: ' + fontCacheDir)
                 runCallback = self.callback
                 statBarCB = FontConfOutHandler
         else:
@@ -467,9 +448,7 @@ class AnimatedGif:
                     'Welcome to Instagiffer for Windows! Before you can use text features, '
                     'I need to build a font database. This will take a few minutes.',
                 )
-                logging.info(
-                    'First run. Need to build font cache first: ' + fontCacheDir
-                )
+                logging.info('First run. Need to build font cache first: ' + fontCacheDir)
                 runCallback = self.callback
                 statBarCB = FontConfOutHandler
 
@@ -507,9 +486,7 @@ class AnimatedGif:
         )
 
         if not run_process(cmdRotate, self.callback, False):
-            self.FatalError(
-                'Unable to rotate image %s by %d degrees' % (fileName, rotateDegrees)
-            )
+            self.FatalError('Unable to rotate image %s by %d degrees' % (fileName, rotateDegrees))
             return False
 
         return True
@@ -549,9 +526,7 @@ class AnimatedGif:
     def ReEnumerateExtractedFrames(self):
         if not self.ExtractedImagesExist():
             return True
-        return self.ReEnumeratePngFrames(
-            self.GetExtractedImagesDir(), self.GetExtractedImageList()
-        )
+        return self.ReEnumeratePngFrames(self.GetExtractedImagesDir(), self.GetExtractedImageList())
 
     def ReEnumeratePngFrames(self, directory, imageList):
         imageList.sort()
@@ -560,10 +535,7 @@ class AnimatedGif:
         x = 1
 
         if len(imageList) > 0:
-            logging.info(
-                'Re-enumerate %d files starting with %s'
-                % (len(imageList), imageList[0])
-            )
+            logging.info('Re-enumerate %d files starting with %s' % (len(imageList), imageList[0]))
 
         for fromFile in imageList:
             self.callback(False)
@@ -598,9 +570,7 @@ class AnimatedGif:
 
         for x in range(0, len(currentImgList)):
             toFile = GetRenamedName(x + 1)
-            logging.info(
-                'Temporarily rename image %s to %s' % (currentImgList[x], toFile)
-            )
+            logging.info('Temporarily rename image %s to %s' % (currentImgList[x], toFile))
             shutil.move(currentImgList[x], toFile)
 
         for x in range(0, len(currentImgList)):
@@ -662,9 +632,7 @@ class AnimatedGif:
             fa = origImgList[ia]
             fb = origImgList[ib]
 
-            logging.info(
-                'xfade %d with %d by %d percent' % (ia + 1, ib + 1, fadePercent)
-            )
+            logging.info('xfade %d with %d by %d percent' % (ia + 1, ib + 1, fadePercent))
 
             cmdConvert = (
                 '"%s" -comment "Creating cross-fade:%d" "%s" "%s" -alpha on -compose dissolve -define compose:args=%d -composite "%s"'
@@ -727,9 +695,7 @@ class AnimatedGif:
         # Temporarily rename existing images
         for x in range(0, len(currentImgList)):
             toFile = '%scurrent_image%04d.png' % (self.GetExtractedImagesDir(), x + 1)
-            logging.info(
-                'Temporarily rename image %s to %s' % (currentImgList[x], toFile)
-            )
+            logging.info('Temporarily rename image %s to %s' % (currentImgList[x], toFile))
 
             if currentImgList[x] in importedImgList:
                 shutil.copy(currentImgList[x], toFile)
@@ -756,9 +722,9 @@ class AnimatedGif:
             aspectRatioModifier = ''
             if keepAspectRatio:
                 # ( -clone 0 -blur 0x9 -resize %dx%d! ) ( -clone 0 -resize WxH ) -delete 0
-                aspectRatioModifier = (
-                    ' -background black -gravity center -extent %dx%d '
-                    % (self.GetVideoWidth(), self.GetVideoHeight())
+                aspectRatioModifier = ' -background black -gravity center -extent %dx%d ' % (
+                    self.GetVideoWidth(),
+                    self.GetVideoHeight(),
                 )
             else:
                 aspectRatioModifier = '! '
@@ -768,9 +734,7 @@ class AnimatedGif:
             if percentDone > 100 or igf_paths.is_gif(importFile):
                 percentDone = -1
 
-            comment = ' -comment "Importing frames:%d" -comment "instagiffer" ' % (
-                percentDone
-            )
+            comment = ' -comment "Importing frames:%d" -comment "instagiffer" ' % (percentDone)
             cmdConvert = '"%s" %s "%s" -resize %dx%d%s "%s"' % (
                 self.conf.GetParam('paths', 'convert'),
                 comment,
@@ -783,9 +747,7 @@ class AnimatedGif:
 
             if not run_process(cmdConvert, self.callback, False, False):
                 self.DeleteExtractedImages()
-                self.FatalError(
-                    'Unable to resize import image %s. Import failed!' % (toFile)
-                )
+                self.FatalError('Unable to resize import image %s. Import failed!' % (toFile))
 
             if os.path.exists(toFile):
                 newImportList.append(toFile)
@@ -848,8 +810,7 @@ class AnimatedGif:
             gifDir.encode(locale.getpreferredencoding())
         except UnicodeError:
             logging.info(
-                'GIF output directory is problematic due to non-latin characters: '
-                + gifDir
+                'GIF output directory is problematic due to non-latin characters: ' + gifDir
             )
             gifDir = igf_paths.get_fail_safe_dir(self.conf, gifDir)
 
@@ -893,9 +854,7 @@ class AnimatedGif:
                 idx += 1
 
         if not file_name:
-            self.FatalError(
-                'Configuration error detected. No GIF output path specified.'
-            )
+            self.FatalError('Configuration error detected. No GIF output path specified.')
 
         return file_name
 
@@ -1017,8 +976,7 @@ class AnimatedGif:
         elif self.videoFps <= 0.0:
             self.videoFps = 10.0
             logging.info(
-                'Unable to determine frame rate! Arbitrarily setting it to %d'
-                % (self.videoFps)
+                'Unable to determine frame rate! Arbitrarily setting it to %d' % (self.videoFps)
             )
 
         logging.info(
@@ -1026,10 +984,8 @@ class AnimatedGif:
             % (
                 self.GetVideoWidth(),
                 self.GetVideoHeight(),
-                self.GetVideoWidth()
-                / math.gcd(self.GetVideoWidth(), self.GetVideoHeight()),
-                self.GetVideoHeight()
-                / math.gcd(self.GetVideoWidth(), self.GetVideoHeight()),
+                self.GetVideoWidth() / math.gcd(self.GetVideoWidth(), self.GetVideoHeight()),
+                self.GetVideoHeight() / math.gcd(self.GetVideoWidth(), self.GetVideoHeight()),
                 self.GetVideoWidth() / float(self.GetVideoHeight()),
                 self.GetVideoFps(),
             )
@@ -1131,8 +1087,7 @@ class AnimatedGif:
                 os.remove(f)
             except Exception:  # WindowsError:
                 errStr = (
-                    "Can't delete the following file:\n\n%s\n\nIs it open in another program?"
-                    % (f)
+                    "Can't delete the following file:\n\n%s\n\nIs it open in another program?" % (f)
                 )
                 self.FatalError(errStr)
 
@@ -1141,9 +1096,7 @@ class AnimatedGif:
 
     def GetProcessedImageList(self):
         ret = []
-        files = glob.glob(
-            self.GetProcessedImagesDir() + '*.' + self.GetIntermediaryFrameFormat()
-        )
+        files = glob.glob(self.GetProcessedImagesDir() + '*.' + self.GetIntermediaryFrameFormat())
         for f in files:
             ret.append(f)
         return ret
@@ -1214,9 +1167,7 @@ class AnimatedGif:
             ('title', 'Created and uploaded using Instagiffer'),
         )
 
-        req = urllib.request.Request(
-            IMGUR_API_URL, urllib.parse.urlencode(data).encode('utf-8')
-        )
+        req = urllib.request.Request(IMGUR_API_URL, urllib.parse.urlencode(data).encode('utf-8'))
         req.add_header('Authorization', 'Client-ID ' + __imgur_cid__)
 
         try:
@@ -1318,16 +1269,13 @@ class AnimatedGif:
         except Exception:
             pass
 
-        cmdExtractImages = (
-            '"%s" -y -v verbose -ss %s -t %.1f -i "%s" -af "volume=%.1f" "%s"'
-            % (
-                self.conf.GetParam('paths', 'ffmpeg'),
-                startTimeStr,
-                durationSec,
-                audioPath,
-                volume,
-                self.audioClipFile,
-            )
+        cmdExtractImages = '"%s" -y -v verbose -ss %s -t %.1f -i "%s" -af "volume=%.1f" "%s"' % (
+            self.conf.GetParam('paths', 'ffmpeg'),
+            startTimeStr,
+            durationSec,
+            audioPath,
+            volume,
+            self.audioClipFile,
         )
 
         success = run_process(cmdExtractImages, self.callback)
@@ -1340,9 +1288,7 @@ class AnimatedGif:
     def DownloadAudio(self, url):
         # Make sure they don't download a playlist
         if url.lower().find('youtube') != -1 and url.find('&list=') != -1:
-            logging.info(
-                'Youtube playlist detected. Removing playlist component from URL'
-            )
+            logging.info('Youtube playlist detected. Removing playlist component from URL')
             url, sep, extra = url.partition('&list=')
 
         downloadFileName = self.downloadDir + os.sep + 'audiofile_' + str(uuid.uuid4())
@@ -1401,9 +1347,7 @@ class AnimatedGif:
 
         # Make sure they don't download a playlist
         if url.lower().find('youtube') != -1 and url.find('&list=') != -1:
-            logging.info(
-                'Youtube playlist detected. Removing playlist component from URL'
-            )
+            logging.info('Youtube playlist detected. Removing playlist component from URL')
             url, sep, extra = url.partition('&list=')
 
         # Build format str
@@ -1447,16 +1391,9 @@ class AnimatedGif:
                         errStr += 'Video removed because it broke the rules'
                     elif 'is not a valid URL' in line:
                         errStr += 'This is an invalid video URL'
-                    elif (
-                        '10013' in line
-                        or '11001'
-                        or 'CERTIFICATE_VERIFY_FAILED' in line
-                    ):
+                    elif '10013' in line or '11001' or 'CERTIFICATE_VERIFY_FAILED' in line:
                         errStr += 'Unable to download video. Bad URL? Is it a private video? Is your firewall blocking Instagiffer?'
-                    elif (
-                        'Signature extraction failed' in line
-                        or 'HTTP Error 403' in line
-                    ):
+                    elif 'Signature extraction failed' in line or 'HTTP Error 403' in line:
                         errStr += 'There appears to be copyright protection on this video. This frequently occurs with music videos. Ask the Instagiffer devs to release a new version to get around this, or use the screen capture feature.'
                     else:
                         errStr += line
@@ -1498,12 +1435,9 @@ class AnimatedGif:
             # User chose random start time
             if startTimeStr.lower() == 'random':
                 vidLenMs = igf_common.duration_str_to_milliseconds(self.videoLength)
-                startTimeStr = igf_common.milliseconds_to_duration_str(
-                    random.randrange(vidLenMs)
-                )
+                startTimeStr = igf_common.milliseconds_to_duration_str(random.randrange(vidLenMs))
                 logging.info(
-                    'Pick random start time between 0 and %d ms -> %s'
-                    % (vidLenMs, startTimeStr)
+                    'Pick random start time between 0 and %d ms -> %s' % (vidLenMs, startTimeStr)
                 )
 
             # Grab the previous second. This is where the error is found
@@ -1534,17 +1468,14 @@ class AnimatedGif:
             else:
                 verbosityLevel = 'verbose'  # error"
 
-            cmdExtractImages = (
-                '"%s" -v %s -sn -t %.1f -ss %s -i "%s" -r %s "%simage%%04d.png"'
-                % (
-                    self.conf.GetParam('paths', 'ffmpeg'),
-                    verbosityLevel,
-                    durationSec,
-                    startTimeStr,
-                    self.videoPath,
-                    self.conf.GetParam('rate', 'framerate'),
-                    self.frameDir + os.sep,
-                )
+            cmdExtractImages = '"%s" -v %s -sn -t %.1f -ss %s -i "%s" -r %s "%simage%%04d.png"' % (
+                self.conf.GetParam('paths', 'ffmpeg'),
+                verbosityLevel,
+                durationSec,
+                startTimeStr,
+                self.videoPath,
+                self.conf.GetParam('rate', 'framerate'),
+                self.frameDir + os.sep,
             )
 
             success = run_process(cmdExtractImages, self.callback)
@@ -1597,9 +1528,7 @@ class AnimatedGif:
                     self.conf.GetParam('length', 'starttime')
                 ) > igf_common.duration_str_to_milliseconds(self.GetVideoLength()):
                     self.FatalError(
-                        'Start time specified is greater than '
-                        + self.GetVideoLength()
-                        + '.'
+                        'Start time specified is greater than ' + self.GetVideoLength() + '.'
                     )
                 else:
                     self.FatalError('Unsupported file type or DRM-protected.')
@@ -1751,9 +1680,7 @@ class AnimatedGif:
         # Time-based effects
         #
 
-        animationEnvelopeName = self.conf.GetParam(
-            captionId, 'animationEnvelope'
-        ).lower()
+        animationEnvelopeName = self.conf.GetParam(captionId, 'animationEnvelope').lower()
 
         if animationEnvelopeName != 'off':
             fps = int(self.conf.GetParam('rate', 'framerate'))
@@ -1807,9 +1734,7 @@ class AnimatedGif:
 
             # repeat pattern
             if totalTextFrames > 0:
-                patternEnv = ([op for op in patternEnv * totalTextFrames])[
-                    0:totalTextFrames
-                ]
+                patternEnv = ([op for op in patternEnv * totalTextFrames])[0:totalTextFrames]
 
             if 'fade' in animationEnvelopeName and 'in' in animationEnvelopeName:
                 for fx in range(0, min(len(saw), len(patternEnv))):
@@ -1833,20 +1758,13 @@ class AnimatedGif:
 
             if self.conf.GetParam(captionId, 'animationType').lower() == 'left-right':
                 moveRange = 50
-                positionAdjX += -moveRange / 2 + (
-                    moveRange * animationEnv[frameIdx - 1]
-                )
+                positionAdjX += -moveRange / 2 + (moveRange * animationEnv[frameIdx - 1])
 
             if self.conf.GetParam(captionId, 'animationType').lower() == 'up-down':
                 moveRange = 50
-                positionAdjY += -moveRange / 2 + (
-                    moveRange * animationEnv[frameIdx - 1]
-                )
+                positionAdjY += -moveRange / 2 + (moveRange * animationEnv[frameIdx - 1])
 
-            if (
-                self.conf.GetParam(captionId, 'animationType').lower()
-                == 'subtle change'
-            ):
+            if self.conf.GetParam(captionId, 'animationType').lower() == 'subtle change':
                 moveRange = 2
                 moveAmount = -moveRange / 2 + (moveRange * animationEnv[frameIdx - 1])
                 positionAdjY += moveAmount
@@ -1906,9 +1824,10 @@ class AnimatedGif:
         if fontId is None:
             self.FatalError('Unable to find font: %s (%s) ' % (fontFamily, fontStyle))
 
-        cmdProcImage += (
-            '( +clone -alpha transparent -font %s -pointsize %d -gravity %s '
-            % (fontId, fontSize, gravity)
+        cmdProcImage += '( +clone -alpha transparent -font %s -pointsize %d -gravity %s ' % (
+            fontId,
+            fontSize,
+            gravity,
         )
 
         interlineSpacing = int(self.conf.GetParam(captionId, 'interlineSpacing'))
@@ -1951,24 +1870,19 @@ class AnimatedGif:
                 outlineBlur,
             )
 
-        cmdProcImage += (
-            ' -stroke none  -strokewidth %d -fill %s -annotate %+d%+d "%s" %s '
-            % (
-                fontOutlineThickness,
-                fontColor,
-                positionAdjX,
-                positionAdjY,
-                captionText,
-                fontBlur,
-            )
+        cmdProcImage += ' -stroke none  -strokewidth %d -fill %s -annotate %+d%+d "%s" %s ' % (
+            fontOutlineThickness,
+            fontColor,
+            positionAdjX,
+            positionAdjY,
+            captionText,
+            fontBlur,
         )
 
         if hasShadow:
             cmdProcImage += ' ( +clone -gravity none -background none -shadow 60x1-5-5 ) +swap -compose over -composite '
 
-        cmdProcImage += ' ) -compose dissolve -define compose:args=%d -composite ' % (
-            fontOpacity
-        )
+        cmdProcImage += ' ) -compose dissolve -define compose:args=%d -composite ' % (fontOpacity)
         return cmdProcImage
 
     def CropAndResize(self, argFrameIdx=None):
@@ -2208,9 +2122,7 @@ class AnimatedGif:
             # Blur
             if int(self.conf.GetParam('effects', 'blur')) > 0:
                 rad = 0
-                sig = re_scale(
-                    int(self.conf.GetParam('effects', 'blur')), (0, 100), (1, 11)
-                )
+                sig = re_scale(int(self.conf.GetParam('effects', 'blur')), (0, 100), (1, 11))
                 cmdProcImage += '-blur %dx%s ' % (rad, sig)
 
             # Border
@@ -2260,9 +2172,7 @@ class AnimatedGif:
 
             # Color palette - gif only
             if self.GetFinalOutputFormat() == igf_paths.EXT_GIF:
-                cmdProcImage += ' -depth 8 -colors %s ' % (
-                    self.conf.GetParam('color', 'numcolors')
-                )
+                cmdProcImage += ' -depth 8 -colors %s ' % (self.conf.GetParam('color', 'numcolors'))
 
             cmdProcImage += ' -format %s ' % (self.GetIntermediaryFrameFormat())
             cmdProcImage += '"%s" ' % (outputFileName)
@@ -2305,12 +2215,7 @@ class AnimatedGif:
 
             # Input files
             cmdCreateGif += (
-                '"'
-                + self.processedDir
-                + os.sep
-                + '*.'
-                + self.GetIntermediaryFrameFormat()
-                + '" '
+                '"' + self.processedDir + os.sep + '*.' + self.GetIntermediaryFrameFormat() + '" '
             )
             cmdCreateGif += '"' + fileName + '"'
 
@@ -2324,9 +2229,7 @@ class AnimatedGif:
             finalFps = 30
             framesDir = self.GetProcessedImagesDir()
 
-            self.ReEnumeratePngFrames(
-                self.GetProcessedImagesDir(), self.GetProcessedImageList()
-            )
+            self.ReEnumeratePngFrames(self.GetProcessedImagesDir(), self.GetProcessedImageList())
 
             #
             # - vf Make width/height even
@@ -2358,14 +2261,11 @@ class AnimatedGif:
 
                 volume = int(self.conf.GetParam('audio', 'volume')) / 100.0
 
-                cmdConvertToVideo += (
-                    ' -ss "%s" -i "%s" -af "volume=%.f" -c:a %s -b:a 128k  '
-                    % (
-                        self.conf.GetParam('audio', 'startTime'),
-                        self.conf.GetParam('audio', 'path'),
-                        volume,
-                        audioCodec,
-                    )
+                cmdConvertToVideo += ' -ss "%s" -i "%s" -af "volume=%.f" -c:a %s -b:a 128k  ' % (
+                    self.conf.GetParam('audio', 'startTime'),
+                    self.conf.GetParam('audio', 'path'),
+                    volume,
+                    audioCodec,
                 )
             else:
                 cmdConvertToVideo += ' -f lavfi -i aevalsrc=0 '
@@ -2380,13 +2280,9 @@ class AnimatedGif:
 
             cmdConvertToVideo += ' -shortest  -r %d "%s"' % (finalFps, fileName)
 
-            (out, err) = run_process(
-                cmdConvertToVideo, self.callback, returnOutput=True
-            )
+            (out, err) = run_process(cmdConvertToVideo, self.callback, returnOutput=True)
         else:
-            self.FatalError(
-                "I don't know how to create %s files" % (self.GetFinalOutputFormat())
-            )
+            self.FatalError("I don't know how to create %s files" % (self.GetFinalOutputFormat()))
 
         if not os.path.exists(fileName) or os.path.getsize(fileName) == 0:
             logging.error(err)
@@ -2420,9 +2316,10 @@ class AnimatedGif:
             frameIdx = int(frameIdx)
             frameMs = int(frameMs)
 
-            cmdChangeGifTiming += (
-                ' ( -clone %d -set delay %d ) -swap %d,-1 +delete '
-                % (frameIdx, frameMs / 10, frameIdx)
+            cmdChangeGifTiming += ' ( -clone %d -set delay %d ) -swap %d,-1 +delete ' % (
+                frameIdx,
+                frameMs / 10,
+                frameIdx,
             )
 
         cmdChangeGifTiming += ' "%s"' % (fileName)
@@ -2448,8 +2345,7 @@ class AnimatedGif:
             afterSize = self.GetSize()
 
             logging.info(
-                'Optimization shaved off %.1f kB'
-                % (float(beforeSize - afterSize) / 1024.0)
+                'Optimization shaved off %.1f kB' % (float(beforeSize - afterSize) / 1024.0)
             )
 
     def GenerateFramePreview(self, idx):
@@ -2486,9 +2382,7 @@ class AnimatedGif:
         gifFrameDelay = timePerFrame
 
         if speedModification < 0:
-            gifFrameDelay += int(
-                normalizedMod * 2
-            )  # Increase the effect when slowing down
+            gifFrameDelay += int(normalizedMod * 2)  # Increase the effect when slowing down
         elif speedModification > 0:
             gifFrameDelay -= normalizedMod
 
@@ -2512,8 +2406,7 @@ class AnimatedGif:
 
     def GetVideoLengthSec(self):
         vidLen = float(
-            '%.1f'
-            % (igf_common.duration_str_to_milliseconds(self.videoLength) / 1000.0)
+            '%.1f' % (igf_common.duration_str_to_milliseconds(self.videoLength) / 1000.0)
         )
         return vidLen
 
@@ -2588,7 +2481,9 @@ class AnimatedGif:
             if twitWarn > 0:
                 # might as well tell them about this too
                 if w < 506 or aspectRatio != 1.0 or aspectRatio != 0.5:
-                    warnings += 'Twitter Warning: recommended dimensions are 506x506 or 506x253.\n\n'
+                    warnings += (
+                        'Twitter Warning: recommended dimensions are 506x506 or 506x253.\n\n'
+                    )
 
         if warnGPlus and (w < 496 or h < 496 or aspectRatio != 1.0):
             warnings += 'Google Plus Warning: Recommended dimensions are 496x496.\n\n'
@@ -2598,9 +2493,7 @@ class AnimatedGif:
                 warnings += 'Instagram Warning: Recommended dimensions are 600x600.\n\n'
 
             if self.GetTotalRuntimeSec() > 15:
-                warnings += (
-                    'Instagram Warning: Total runtime must not exceed 15 seconds.\n\n'
-                )
+                warnings += 'Instagram Warning: Total runtime must not exceed 15 seconds.\n\n'
 
         if warnFacebook:
             if w != 504 or h != 283:

@@ -40,9 +40,7 @@ def notify_user(title, msg):
 class GifPlayerWidget(tkinter.Label):
     """Tkinter widget that plays a gif."""
 
-    def __init__(
-        self, master, processedImgList, frameDelayMs, resizable, soundPath=None
-    ):
+    def __init__(self, master, processedImgList, frameDelayMs, resizable, soundPath=None):
         self.delay = frameDelayMs
         self.images = []
         self.frames = []
@@ -113,8 +111,7 @@ class GifPlayerWidget(tkinter.Label):
             self.winfo_width() != self.currW or self.winfo_height() != self.currH
         ):
             logging.info(
-                '%s %s => %d %d'
-                % (self.currW, self.currH, self.winfo_width(), self.winfo_height())
+                '%s %s => %d %d' % (self.currW, self.currH, self.winfo_width(), self.winfo_height())
             )
 
             self.Stop()
@@ -139,7 +136,7 @@ class GifApp:
         self.timerHandle = None
         self.cancelRequest = False
         self.tempDir = None
-        self.captions = dict()
+        self.captions = {}
 
         self.cropResizeChanges = 0
         self.captionChanges = 0
@@ -152,7 +149,7 @@ class GifApp:
         self.savePath = None
         self.parent.withdraw()  # Hide. add components then show at the end
         self.thumbNailsUpdatedTs = 0
-        self.thumbNailCache = dict()
+        self.thumbNailCache = {}
         self.maskEventList = []
         self.maskEdited = False
         self.maskDraw: None | PIL.ImageDraw.ImageDraw = None
@@ -172,8 +169,8 @@ class GifApp:
         # Child Dialog default values
         #
 
-        self.OnCaptionConfigDefaults = dict()
-        self.OnSetLogoDefaults = dict()
+        self.OnCaptionConfigDefaults = {}
+        self.OnSetLogoDefaults = {}
 
         #
         # Load config
@@ -235,7 +232,7 @@ class GifApp:
             self.defaultFontBig = tkinter.font.Font(family='Arial', size=9)
             self.defaultFontTiny = tkinter.font.Font(family='Arial', size=7)
 
-            self.guiConf = dict()
+            self.guiConf = {}
             self.guiConf['guiPadding'] = 7  # GUI padding.
             self.guiConf['timeSpinboxWidth'] = 2  # Width of the MM:HH:SS spinboxes
             self.guiConf['fileEntryWidth'] = 105  # URL/path text field
@@ -252,7 +249,7 @@ class GifApp:
             self.defaultFontBig = tkinter.font.Font(family='Arial', size=11)
             self.defaultFontTiny = tkinter.font.Font(family='Arial', size=9)
 
-            self.guiConf = dict()
+            self.guiConf = {}
             self.guiConf['guiPadding'] = 9
             self.guiConf['timeSpinboxWidth'] = 3
             self.guiConf['fileEntryWidth'] = 119
@@ -276,9 +273,7 @@ class GifApp:
         self.fileMenu = tkinter.Menu(self.menubar, tearoff=0)
 
         self.uploadMenu = tkinter.Menu(self.fileMenu, tearoff=0)
-        self.uploadMenu.add_command(
-            label='Imgur', underline=0, command=self.OnImgurUpload
-        )
+        self.uploadMenu.add_command(label='Imgur', underline=0, command=self.OnImgurUpload)
 
         self.fileMenu.add_command(
             label='Download Video...', underline=1, command=self.OnSaveVideoForLater
@@ -330,9 +325,7 @@ class GifApp:
         self.frameEffectsMenu.add_command(
             label='Crossfade...', underline=8, command=self.OnCrossFade
         )
-        self.frameMenu.add_cascade(
-            label='Frame Effects', underline=0, menu=self.frameEffectsMenu
-        )
+        self.frameMenu.add_cascade(label='Frame Effects', underline=0, menu=self.frameEffectsMenu)
 
         self.frameMenuItemCount = 6
 
@@ -402,9 +395,7 @@ class GifApp:
             label='Frequently Asked Questions', underline=0, command=self.OpenFAQ
         )
         self.helpMenu.add_separator()
-        self.helpMenu.add_command(
-            label='Generate Bug Report', underline=0, command=self.ViewLog
-        )
+        self.helpMenu.add_command(label='Generate Bug Report', underline=0, command=self.ViewLog)
 
         # Top-level
         self.menubar.add_cascade(label='File', underline=0, menu=self.fileMenu)
@@ -471,9 +462,7 @@ class GifApp:
         self.txtFname = tkinter.Entry(
             self.boxOpen, font=self.defaultFont, width=self.guiConf['fileEntryWidth']
         )
-        self.btnFopen = tkinter.Button(
-            self.boxOpen, text='Load Video', command=self.OnLoadVideo
-        )
+        self.btnFopen = tkinter.Button(self.boxOpen, text='Load Video', command=self.OnLoadVideo)
         self.btnScreenCap = tkinter.Button(
             self.boxOpen, text='Capture Screen', command=self.OnScreenCapture
         )
@@ -523,9 +512,7 @@ class GifApp:
         #######################################################################
 
         rowIdx += 1
-        self.boxTweaks = ttk.LabelFrame(
-            frame, text=' Step 2: Video Extraction & GIF Settings '
-        )
+        self.boxTweaks = ttk.LabelFrame(frame, text=' Step 2: Video Extraction & GIF Settings ')
         self.boxTweaks.grid(
             row=rowIdx,
             column=0,
@@ -604,9 +591,7 @@ class GifApp:
         )
         self.frameCounterStr = tkinter.StringVar()
         self.frameDimensionsStr = tkinter.StringVar()
-        self.lblFrameCtr = tkinter.Label(
-            self.boxCropping, textvariable=self.frameCounterStr
-        )
+        self.lblFrameCtr = tkinter.Label(self.boxCropping, textvariable=self.frameCounterStr)
         self.lblFrameDimensions = tkinter.Label(
             self.boxCropping, textvariable=self.frameDimensionsStr
         )
@@ -880,9 +865,7 @@ class GifApp:
             showvalue=True,
             command=self.OnFpsChanged,
         )
-        self.lblFps.grid(
-            row=rowIdx, column=0, sticky=tkinter.W, padx=padding, pady=padding
-        )
+        self.lblFps.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=padding, pady=padding)
         self.sclFps.grid(
             row=rowIdx,
             column=1,
@@ -893,9 +876,7 @@ class GifApp:
         )
 
         rowIdx += 1
-        self.lblBlankLine = tkinter.Label(
-            self.boxTweaks, text=' ', font=self.defaultFontTiny
-        )
+        self.lblBlankLine = tkinter.Label(self.boxTweaks, text=' ', font=self.defaultFontTiny)
         self.lblBlankLine.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=0, pady=0)
 
         rowIdx += 1
@@ -915,9 +896,7 @@ class GifApp:
             showvalue=True,
             command=self.OnCropUpdate,
         )
-        self.lblResize.grid(
-            row=rowIdx, column=0, sticky=tkinter.W, padx=padding, pady=padding
-        )
+        self.lblResize.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=padding, pady=padding)
         self.sclResize.grid(
             row=rowIdx,
             column=1,
@@ -943,9 +922,7 @@ class GifApp:
             fg=valueFontColor,
             showvalue=True,
         )
-        self.lblNumColors.grid(
-            row=rowIdx, column=0, sticky=tkinter.W, padx=padding, pady=padding
-        )
+        self.lblNumColors.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=padding, pady=padding)
         self.sclNumColors.grid(
             row=rowIdx,
             column=1,
@@ -973,9 +950,7 @@ class GifApp:
         )
         # self.sclBright.bind('<Double-Button-1>', self.SnapResetBrightness)
 
-        self.lblBright.grid(
-            row=rowIdx, column=0, sticky=tkinter.W, padx=padding, pady=padding
-        )
+        self.lblBright.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=padding, pady=padding)
         self.sclBright.grid(
             row=rowIdx,
             column=1,
@@ -1016,9 +991,7 @@ class GifApp:
         rowIdx += 1
         self.lblCaption = tkinter.Label(self.boxTweaks, text='Captions')
         self.currentCaption = tkinter.StringVar()
-        self.cbxCaptionList = ttk.Combobox(
-            self.boxTweaks, textvariable=self.currentCaption
-        )
+        self.cbxCaptionList = ttk.Combobox(self.boxTweaks, textvariable=self.currentCaption)
         self.captionTracer = None
 
         self.lblCaption.grid(
@@ -1106,9 +1079,7 @@ class GifApp:
             font=self.defaultFontTiny,
             command=self.OnEditEffects,
         )
-        self.lblEffects.grid(
-            row=rowIdx, column=0, sticky=tkinter.W, padx=padding, pady=padding
-        )
+        self.lblEffects.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=padding, pady=padding)
         self.btnEditEffects.grid(
             row=rowIdx, column=1, columnspan=4, sticky='EW', padx=padding, pady=padding
         )
@@ -1206,9 +1177,7 @@ class GifApp:
         self.tempDir = igf_paths.create_working_dir(self.conf)
 
         if self.tempDir == '':
-            self.Alert(
-                'Failed to create working folder', 'Unable to create working directory'
-            )
+            self.Alert('Failed to create working folder', 'Unable to create working directory')
             raise SystemExit
 
     def ForceSingleInstance(self):
@@ -1218,9 +1187,7 @@ class GifApp:
             from win32event import CreateMutex
             from winerror import ERROR_ALREADY_EXISTS
 
-            self.singleInstanceMutex = CreateMutex(
-                None, False, 'instagiffer_single_instance_mutex'
-            )
+            self.singleInstanceMutex = CreateMutex(None, False, 'instagiffer_single_instance_mutex')
             if win32api.GetLastError() == ERROR_ALREADY_EXISTS:
                 self.Alert(
                     'Instagiffer is already running!',
@@ -1234,8 +1201,7 @@ class GifApp:
             deleteConfirmed = tkinter.messagebox.askyesno(
                 'Are You Sure?',
                 'This will delete all downloads as well as the session currently in progress. '
-                'Are you sure? The following directory will be deleted:\n\n'
-                + self.tempDir,
+                'Are you sure? The following directory will be deleted:\n\n' + self.tempDir,
             )
         else:
             deleteConfirmed = True
@@ -1338,7 +1304,7 @@ class GifApp:
             'Uploading GIF to Imgur... During this time, Instagiffer will appear frozen. Patience, K?'
         )
         ret = self.gif.UploadGifToImgur()
-        self.SetStatus('Gif uploaded to Imgur. URL: %s' % (ret))
+        self.SetStatus(f'Gif uploaded to Imgur. URL: {ret}')
 
         if ret is None:
             self.Alert(imgurErrorTitle, 'Failed to upload GIF to Imgur. Grrrrr...')
@@ -1447,9 +1413,7 @@ class GifApp:
 
     def TrackbarToTimeFields(self):
         positionSec = self.sclStart.get()
-        positionComponents = igf_common.milliseconds_to_duration_components(
-            positionSec * 1000
-        )
+        positionComponents = igf_common.milliseconds_to_duration_components(positionSec * 1000)
 
         self.spnStartTimeHour.delete(0, 'end')
         self.spnStartTimeHour.insert(0, '%d' % positionComponents[0])
@@ -1580,12 +1544,8 @@ class GifApp:
         self.canCropTool.tag_bind('cropMove', '<B1-Motion>', self.OnCropMove)
         self.canCropTool.tag_bind('cropSizeTL', '<B1-Motion>', self.OnCropSizeTL)
         self.canCropTool.tag_bind('cropSizeBR', '<B1-Motion>', self.OnCropSizeBR)
-        self.canCropTool.tag_bind(
-            'cropSizeTL', whichRMouseEvent, self.OnCropSizeTLRestrictAxis
-        )
-        self.canCropTool.tag_bind(
-            'cropSizeBR', whichRMouseEvent, self.OnCropSizeBRRestrictAxis
-        )
+        self.canCropTool.tag_bind('cropSizeTL', whichRMouseEvent, self.OnCropSizeTLRestrictAxis)
+        self.canCropTool.tag_bind('cropSizeBR', whichRMouseEvent, self.OnCropSizeBRRestrictAxis)
 
         self.canCropTool.bind('<Double-Button-1>', self.OnDoubleClickDelete)
         self.OnCropUpdate()
@@ -1657,8 +1617,7 @@ class GifApp:
                 img = self.thumbNailCache[imgPath]
             except Exception:
                 logging.error(
-                    'Thumbnail cache miss: %s. Marking thumbnail cache as stale'
-                    % imgPath
+                    'Thumbnail cache miss: %s. Marking thumbnail cache as stale' % imgPath
                 )
                 self.thumbNailsUpdatedTs = -3
                 return
@@ -1667,9 +1626,7 @@ class GifApp:
         #
         else:
             img = PIL.Image.open(imgPath)
-            img = img.resize(
-                (int(px2 - px) + 1, int(py2 - py) + 1), PIL.Image.Resampling.BICUBIC
-            )
+            img = img.resize((int(px2 - px) + 1, int(py2 - py) + 1), PIL.Image.Resampling.BICUBIC)
 
         self.thumbnailPreview = PIL.ImageTk.PhotoImage(img)
         self.canCropTool.delete('thumbnail')
@@ -1684,9 +1641,7 @@ class GifApp:
 
         # Update frame counter and track bar
         if len(imgList):
-            self.frameCounterStr.set(
-                'Frame  %d / %d' % (self.thumbnailIdx, len(imgList))
-            )
+            self.frameCounterStr.set('Frame  %d / %d' % (self.thumbnailIdx, len(imgList)))
             self.sclFrameTrackbar.configure(to=len(imgList))  # This can recurse?
 
     def TrackbarCanPlay(self):
@@ -1817,9 +1772,7 @@ class GifApp:
         frameScale = self.sclResize.get() / 100.0
         videoWidth = self.gif.GetVideoWidth()
         videoHeight = self.gif.GetVideoHeight()
-        scaleFactor = float(self.canvasSize) / (
-            frameScale * max(videoWidth, videoHeight)
-        )
+        scaleFactor = float(self.canvasSize) / (frameScale * max(videoWidth, videoHeight))
 
         ret = val * scaleFactor
         return ret
@@ -1940,9 +1893,7 @@ class GifApp:
         if cx2 + deltaX > px2:
             deltaX = (cx2 - px2) * -1
 
-        self.canCropTool.coords(
-            'cropRect', cx + deltaX, cy + deltaY, cx2 + deltaX, cy2 + deltaY
-        )
+        self.canCropTool.coords('cropRect', cx + deltaX, cy + deltaY, cx2 + deltaX, cy2 + deltaY)
         self.OnCropUpdate()
 
     def OnCropSizeTL(self, event):
@@ -2133,9 +2084,7 @@ class GifApp:
 
         self.cbxCaptionList['values'] = ('[Click here to add a new caption]',)
         self.cbxCaptionList.current(0)
-        self.captionTracer = self.currentCaption.trace_add(
-            'write', self.OnCaptionSelect
-        )
+        self.captionTracer = self.currentCaption.trace_add('write', self.OnCaptionSelect)
 
         for strVar in [self.startTimeHour, self.startTimeMilli]:
             strVar.set('0')
@@ -2198,9 +2147,7 @@ class GifApp:
 
     #
     # otherOptions:
-    def EnableInputs(
-        self, optionsRequiringLoadedVideo, otherOptions, forceEnable=False
-    ):
+    def EnableInputs(self, optionsRequiringLoadedVideo, otherOptions, forceEnable=False):
         if self.gif is None:
             optionsRequiringLoadedVideo = False
 
@@ -2313,21 +2260,11 @@ class GifApp:
 
         self.sclFps.set(fps)
         self.sclResize.set(int(self.gif.GetConfig().GetParam('size', 'resizePostCrop')))
-        self.sclSpeedModifier.set(
-            int(self.gif.GetConfig().GetParam('rate', 'speedModifier'))
-        )
-        self.sclNumColors.set(
-            int(self.gif.GetConfig().GetParam('color', 'numColors')) / 2.55
-        )
-        self.sclBright.set(
-            int(self.gif.GetConfig().GetParam('effects', 'brightness')) / 10.0
-        )
-        self.isGrayScale.set(
-            self.gif.GetConfig().GetParam('color', 'colorSpace') == 'Gray'
-        )
-        self.isDesaturated.set(
-            int(self.gif.GetConfig().GetParam('color', 'saturation')) < 0
-        )
+        self.sclSpeedModifier.set(int(self.gif.GetConfig().GetParam('rate', 'speedModifier')))
+        self.sclNumColors.set(int(self.gif.GetConfig().GetParam('color', 'numColors')) / 2.55)
+        self.sclBright.set(int(self.gif.GetConfig().GetParam('effects', 'brightness')) / 10.0)
+        self.isGrayScale.set(self.gif.GetConfig().GetParam('color', 'colorSpace') == 'Gray')
+        self.isDesaturated.set(int(self.gif.GetConfig().GetParam('color', 'saturation')) < 0)
         self.isBlurred.set(int(self.gif.GetConfig().GetParam('effects', 'blur')) > 0)
         self.isSharpened.set(self.gif.GetConfig().GetParamBool('effects', 'sharpen'))
         self.isSepia.set(self.gif.GetConfig().GetParamBool('effects', 'sepia'))
@@ -2335,15 +2272,9 @@ class GifApp:
         self.isColorTint.set(self.gif.GetConfig().GetParamBool('effects', 'colorTint'))
         self.isNashville.set(self.gif.GetConfig().GetParamBool('effects', 'nashville'))
         self.isBordered.set(self.gif.GetConfig().GetParamBool('effects', 'border'))
-        self.isCinemagraph.set(
-            self.gif.GetConfig().GetParamBool('blend', 'cinemagraph')
-        )
-        self.invertCinemagraph.set(
-            self.gif.GetConfig().GetParamBool('blend', 'cinemagraphInvert')
-        )
-        self.isAudioEnabled.set(
-            self.gif.GetConfig().GetParamBool('audio', 'audioEnabled')
-        )
+        self.isCinemagraph.set(self.gif.GetConfig().GetParamBool('blend', 'cinemagraph'))
+        self.invertCinemagraph.set(self.gif.GetConfig().GetParamBool('blend', 'cinemagraphInvert'))
+        self.isAudioEnabled.set(self.gif.GetConfig().GetParamBool('audio', 'audioEnabled'))
 
         self.InitializeCropTool()
         self.guiBusy = False
@@ -2464,9 +2395,7 @@ class GifApp:
 
             # Sanity checks
             if timeOrRateSettingChanges > 0:
-                totalFrames = int(
-                    float(self.spnDuration.get()) * int(self.sclFps.get())
-                )
+                totalFrames = int(float(self.spnDuration.get()) * int(self.sclFps.get()))
                 if totalFrames > 9999:
                     return (
                         False,
@@ -2499,9 +2428,7 @@ class GifApp:
             sizeSettingChanges += self.gif.GetConfig().SetParam(
                 'size', 'cropOffsetY', self.cropStartY
             )
-            sizeSettingChanges += self.gif.GetConfig().SetParam(
-                'size', 'cropWidth', self.cropWidth
-            )
+            sizeSettingChanges += self.gif.GetConfig().SetParam('size', 'cropWidth', self.cropWidth)
             sizeSettingChanges += self.gif.GetConfig().SetParam(
                 'size', 'cropHeight', self.cropHeight
             )
@@ -2532,9 +2459,7 @@ class GifApp:
             gifSettingChanges += self.gif.GetConfig().SetParam(
                 'effects', 'contrast', self.sclBright.get() * 10
             )
-            gifSettingChanges += self.gif.GetConfig().SetParam(
-                'color', 'saturation', saturation
-            )
+            gifSettingChanges += self.gif.GetConfig().SetParam('color', 'saturation', saturation)
             gifSettingChanges += self.gif.GetConfig().SetParamBool(
                 'effects', 'sharpen', self.isSharpened.get()
             )
@@ -2577,15 +2502,11 @@ class GifApp:
             gifSettingChanges += self.gif.GetConfig().SetParam(
                 'effects', 'nashvilleAmount', self.nashvilleAmount.get()
             )
-            gifSettingChanges += self.gif.GetConfig().SetParam(
-                'effects', 'blur', str(blur)
-            )
+            gifSettingChanges += self.gif.GetConfig().SetParam('effects', 'blur', str(blur))
             gifSettingChanges += self.gif.GetConfig().SetParam(
                 'color', 'numColors', str(int(self.sclNumColors.get() * 2.55))
             )
-            gifSettingChanges += self.gif.GetConfig().SetParam(
-                'color', 'colorSpace', colorSpace
-            )
+            gifSettingChanges += self.gif.GetConfig().SetParam('color', 'colorSpace', colorSpace)
             gifSettingChanges += self.gif.GetConfig().SetParamBool(
                 'audio', 'audioEnabled', self.isAudioEnabled.get()
             )
@@ -2607,9 +2528,7 @@ class GifApp:
                 self.miscGifChanges = 0
                 self.audioChanges = 0
             else:
-                self.miscGifChanges += (
-                    gifSettingChanges  # for now, just store these here
-                )
+                self.miscGifChanges += gifSettingChanges  # for now, just store these here
 
         # This code is too complicated
 
@@ -2629,10 +2548,7 @@ class GifApp:
         if (
             self.lastProcessTsByLevel[3] == 0
             or (self.lastProcessTsByLevel[2] > self.lastProcessTsByLevel[3])
-            or (
-                self.gif.GetResizedImagesLastModifiedTs()
-                > self.gif.GetGifLastModifiedTs()
-            )
+            or (self.gif.GetResizedImagesLastModifiedTs() > self.gif.GetGifLastModifiedTs())
             or len(self.gif.GetProcessedImageList()) == 0
         ):
             gifSettingChanges += 1
@@ -2640,8 +2556,7 @@ class GifApp:
         # Conflict. They changed form settings that will generate new stills, but they also made manual edits in explorer
         if (
             self.lastProcessTsByLevel[1] > 0
-            and self.lastProcessTsByLevel[1]
-            < self.gif.GetExtractedImagesLastModifiedTs()
+            and self.lastProcessTsByLevel[1] < self.gif.GetExtractedImagesLastModifiedTs()
             and timeOrRateSettingChanges
         ):
             logging.info(
@@ -2676,13 +2591,9 @@ class GifApp:
                 #
 
                 frameCount = self.gif.GetNumFrames()
-                deleteDupFrames = self.conf.GetParamBool(
-                    'settings', 'autoDeleteDuplicateFrames'
-                )
+                deleteDupFrames = self.conf.GetParamBool('settings', 'autoDeleteDuplicateFrames')
 
-                self.SetStatus(
-                    '(1/' + str(processStages) + ') Checking for duplicate frames...'
-                )
+                self.SetStatus('(1/' + str(processStages) + ') Checking for duplicate frames...')
                 numDups = self.gif.CheckDuplicates(deleteDupFrames)
 
                 if numDups > 0 and deleteDupFrames:
@@ -2691,11 +2602,7 @@ class GifApp:
                         % (numDups, frameCount, str(deleteDupFrames))
                     )
 
-                if (
-                    not self.gif.SourceIsVideo()
-                    and frameCount > 20
-                    and frameCount - 1 == numDups
-                ):
+                if not self.gif.SourceIsVideo() and frameCount > 20 and frameCount - 1 == numDups:
                     raise Exception(
                         "How boring! All of your frames are exactly the same! Note: If you're looking a black/blank image, try screen capturing on your other monitor - it's a known issue."
                     )
@@ -2713,9 +2620,7 @@ class GifApp:
                         'Generating Preview... First preview takes a few secs to generate. Subsequent previews will be quicker...'
                     )
                 else:
-                    self.SetStatus(
-                        '(2/' + str(processStages) + ') Cropping and resizing...'
-                    )
+                    self.SetStatus('(2/' + str(processStages) + ') Cropping and resizing...')
 
                 if not preview:
                     self.gif.CropAndResize()
@@ -2789,14 +2694,10 @@ class GifApp:
             elif len(self.gif.GetProcessedImageList()) == 0:
                 self.Alert(
                     'Frames Not Found',
-                    'Processed %s frames not found'
-                    % (self.gif.GetIntermediaryFrameFormat()),
+                    'Processed %s frames not found' % (self.gif.GetIntermediaryFrameFormat()),
                 )
             else:
-                if (
-                    self.gif.GetCompatibilityWarning()
-                    and self.gif.CompatibilityWarningsEnabled()
-                ):
+                if self.gif.GetCompatibilityWarning() and self.gif.CompatibilityWarningsEnabled():
                     self.Alert(
                         "Wait! This won't display properly on some social media sites!!",
                         self.gif.GetCompatibilityWarning(),
@@ -2809,9 +2710,7 @@ class GifApp:
                     + self.gif.GetLastGifOutputPath()
                 )
 
-                self.PlayGif(
-                    self.gif.GetProcessedImageList(), self.gif.GetGifFrameDelay()
-                )
+                self.PlayGif(self.gif.GetProcessedImageList(), self.gif.GetGifFrameDelay())
 
         if doUpdateThumbs:
             self.SetThumbNailIndex(1)
@@ -2848,8 +2747,7 @@ class GifApp:
         totalCount = imgCount + otherCount
 
         logging.info(
-            'Total file count %d (Images: %d; Other: %d)'
-            % (totalCount, imgCount, otherCount)
+            'Total file count %d (Images: %d; Other: %d)' % (totalCount, imgCount, otherCount)
         )
 
         if totalCount == 0:
@@ -2885,9 +2783,7 @@ class GifApp:
         file_name = self.txtFname.get().strip()
 
         # Check same URL?
-        if self.gif is not None and self.gif.IsSameVideo(
-            file_name, self.downloadQuality.get()
-        ):
+        if self.gif is not None and self.gif.IsSameVideo(file_name, self.downloadQuality.get()):
             logging.info('URL present in textfield. Show Open dialog')
             file_name = ''
 
@@ -2931,9 +2827,7 @@ class GifApp:
                     file_names = tkinter.filedialog.askopenfilename()
 
             try:
-                logging.info(
-                    'Open returned: ' + str(file_names) + ' (%s)' % (type(file_names))
-                )
+                logging.info('Open returned: ' + str(file_names) + ' (%s)' % (type(file_names)))
             except Exception:
                 logging.info('Failed to decode value returned by Open dialog')
 
@@ -3039,8 +2933,8 @@ class GifApp:
             else:
                 self.Alert(
                     'A Problem Occurred',
-                    'Error: %s\n\nIf you think this is a bug, please generate a bug report and send it to instagiffer@gmail.com.'
-                    % errStr,
+                    f'Error: {errStr}\n\nIf you think this is a bug, please generate a bug report and '
+                    'send it to instagiffer@gmail.com.',
                 )
 
             self.SetStatus('Failed to load video!')
@@ -3127,13 +3021,11 @@ class GifApp:
                 IM_A_PC
                 and self.isAudioEnabled.get()
                 and self.HaveAudioPath()
-                and self.gif.GetFinalOutputFormat() != 'gif'
+                and self.gif.GetFinalOutputFormat() != igf_paths.EXT_GIF
             ):
                 soundPath = self.gif.GetAudioClipPath()
 
-            anim = GifPlayerWidget(
-                popupWindow, filename, frameDelay * 10, isResizable, soundPath
-            )
+            anim = GifPlayerWidget(popupWindow, filename, frameDelay * 10, isResizable, soundPath)
         except MemoryError:
             self.Alert('Gif Player', 'Unable to show preview. Your GIF is too big.')
             return
@@ -3177,9 +3069,7 @@ class GifApp:
         popupWindow.wm_attributes('-alpha', 0.7)
         popupWindow.wm_attributes('-topmost', True)
 
-        lblDuration = tkinter.Label(
-            popupWindow, font=self.defaultFont, text='Length (s)'
-        )
+        lblDuration = tkinter.Label(popupWindow, font=self.defaultFont, text='Length (s)')
         spnDuration = tkinter.Spinbox(
             popupWindow,
             font=self.defaultFont,
@@ -3229,9 +3119,7 @@ class GifApp:
             chkCursor.grid(row=1, column=columns, padx=2, pady=2)
             columns += 1
 
-        lblResizeWindow.grid(
-            row=0, column=0, columnspan=columns + 1, padx=2, pady=5, sticky='NSEW'
-        )
+        lblResizeWindow.grid(row=0, column=0, columnspan=columns + 1, padx=2, pady=5, sticky='NSEW')
         popupWindow.rowconfigure(0, weight=1)
         popupWindow.columnconfigure(0, weight=1)
 
@@ -3371,14 +3259,12 @@ class GifApp:
                     borderwidth=3,
                     font=('Arial', '25', 'normal'),
                 )
-                lnlCaptureCountdown.pack(expand=1, fill='both')
+                lnlCaptureCountdown.grid(expand=1, fill='both')
                 captureWarning.wm_geometry('200x75+0+0')  # % (w, h, x, y))
 
                 countDownStr = ['Go!']
                 countDownTimeSec = [0.15]
-                countDownValSecs = int(
-                    self.conf.GetParam('screencap', 'countDownSeconds')
-                )
+                countDownValSecs = int(self.conf.GetParam('screencap', 'countDownSeconds'))
 
                 for x in range(1, countDownValSecs + 1):
                     countDownStr.insert(0, 'Capture in %d' % (x))
@@ -3443,27 +3329,15 @@ class GifApp:
     def OnSetLogo(self):
         # Default form values
         if len(self.OnSetLogoDefaults) == 0:
-            self.OnSetLogoDefaults['logoApplyFx'] = self.conf.GetParamBool(
-                'imagelayer1', 'applyFx'
-            )
-            self.OnSetLogoDefaults['logoPath'] = self.conf.GetParam(
-                'imagelayer1', 'path'
-            )
+            self.OnSetLogoDefaults['logoApplyFx'] = self.conf.GetParamBool('imagelayer1', 'applyFx')
+            self.OnSetLogoDefaults['logoPath'] = self.conf.GetParam('imagelayer1', 'path')
             self.OnSetLogoDefaults['logoPositioning'] = self.conf.GetParam(
                 'imagelayer1', 'positioning'
             )
-            self.OnSetLogoDefaults['logoResize'] = self.conf.GetParam(
-                'imagelayer1', 'resize'
-            )
-            self.OnSetLogoDefaults['logoOpacity'] = self.conf.GetParam(
-                'imagelayer1', 'opacity'
-            )
-            self.OnSetLogoDefaults['logoXoffset'] = self.conf.GetParam(
-                'imagelayer1', 'xNudge'
-            )
-            self.OnSetLogoDefaults['logoYoffset'] = self.conf.GetParam(
-                'imagelayer1', 'yNudge'
-            )
+            self.OnSetLogoDefaults['logoResize'] = self.conf.GetParam('imagelayer1', 'resize')
+            self.OnSetLogoDefaults['logoOpacity'] = self.conf.GetParam('imagelayer1', 'opacity')
+            self.OnSetLogoDefaults['logoXoffset'] = self.conf.GetParam('imagelayer1', 'xNudge')
+            self.OnSetLogoDefaults['logoYoffset'] = self.conf.GetParam('imagelayer1', 'yNudge')
 
         dlg = self.CreateChildDialog('Configure Logo')
 
@@ -3581,27 +3455,19 @@ class GifApp:
 
         rowIdx += 1
         lblPos.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
-        cbxPosition.grid(
-            row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2
-        )
+        cbxPosition.grid(row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2)
 
         rowIdx += 1
         lblFilters.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
-        chkApplyFxToLogo.grid(
-            row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2
-        )
+        chkApplyFxToLogo.grid(row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2)
 
         rowIdx += 1
         lblResize.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
-        spnResizePercent.grid(
-            row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2
-        )
+        spnResizePercent.grid(row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2)
 
         rowIdx += 1
         lblOpacity.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
-        spnOpacityPercent.grid(
-            row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2
-        )
+        spnOpacityPercent.grid(row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2)
 
         rowIdx += 1
         lblXOffset.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
@@ -3612,9 +3478,7 @@ class GifApp:
         spnY.grid(row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2)
 
         rowIdx += 1
-        btnOk.grid(
-            row=rowIdx, column=0, sticky=tkinter.EW, padx=4, pady=4, columnspan=3
-        )
+        btnOk.grid(row=rowIdx, column=0, sticky=tkinter.EW, padx=4, pady=4, columnspan=3)
 
         tooltips = {
             btnChooseFile: 'Choose a logo image in .gif format. Your logo can contain transparency.',
@@ -3824,9 +3688,7 @@ class GifApp:
             wrap=True,
         )
 
-        btnExport = tkinter.Button(
-            dlg, text='Select directory and export frames', padx=4, pady=4
-        )
+        btnExport = tkinter.Button(dlg, text='Select directory and export frames', padx=4, pady=4)
 
         rowNum = 0
         lblPrefix.grid(row=rowNum, column=0, sticky=tkinter.W, padx=4, pady=4)
@@ -3836,9 +3698,7 @@ class GifApp:
         spnRotation.grid(row=rowNum, column=1, sticky=tkinter.W, padx=4, pady=4)
         rowNum += 1
         lblCropResize.grid(row=rowNum, column=0, sticky=tkinter.W, padx=4, pady=4)
-        chkCropResize.grid(
-            row=rowNum, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2
-        )
+        chkCropResize.grid(row=rowNum, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2)
         rowNum += 1
         lblStartFrame.grid(row=rowNum, column=0, sticky=tkinter.W, padx=4, pady=4)
         sclStartFrame.grid(row=rowNum, column=1, sticky=tkinter.W, padx=4, pady=4)
@@ -3846,9 +3706,7 @@ class GifApp:
         lblEndFrame.grid(row=rowNum, column=0, sticky=tkinter.W, padx=4, pady=4)
         sclEndFrame.grid(row=rowNum, column=1, sticky=tkinter.W, padx=4, pady=4)
         rowNum += 1
-        btnExport.grid(
-            row=rowNum, column=0, sticky=tkinter.EW, padx=4, pady=4, columnspan=2
-        )
+        btnExport.grid(row=rowNum, column=0, sticky=tkinter.EW, padx=4, pady=4, columnspan=2)
 
         tooltips = {
             txtPrefix: 'All exported frames will start with this pattern. A sequential number will be appended to the end.',
@@ -3888,8 +3746,7 @@ class GifApp:
             btnExport.configure(state='disabled')
 
             logging.info(
-                'Output folder: %s. Write access: %d'
-                % (outputDir, os.access(outputDir, os.W_OK))
+                'Output folder: %s. Write access: %d' % (outputDir, os.access(outputDir, os.W_OK))
             )
 
             if outputDir == '' or self.gif is None:
@@ -3903,9 +3760,7 @@ class GifApp:
             if self.gif.ExportFrames(
                 start, end, prefix, includeCropAndResize.get(), rotation, outputDir
             ):
-                self.SetStatus(
-                    'Frames %d to %d exported to %s' % (start, end, outputDir)
-                )
+                self.SetStatus('Frames %d to %d exported to %s' % (start, end, outputDir))
             else:
                 # assume that this is the error.
                 tkinter.messagebox.showinfo('Export Failed', 'Failed to export frames!')
@@ -3934,9 +3789,7 @@ class GifApp:
         sclStartFrame = None
 
         numFrames = self.gif.GetNumFrames()
-        lblStartFrame = tkinter.Label(
-            dlg, font=self.defaultFont, text='Insert after Frame'
-        )
+        lblStartFrame = tkinter.Label(dlg, font=self.defaultFont, text='Insert after Frame')
         sclStartFrame = tkinter.Scale(
             dlg,
             font=self.defaultFontTiny,
@@ -3952,15 +3805,11 @@ class GifApp:
         )
 
         importReversed = tkinter.IntVar()
-        lblImportReversed = tkinter.Label(
-            dlg, font=self.defaultFont, text='Reverse frames'
-        )
+        lblImportReversed = tkinter.Label(dlg, font=self.defaultFont, text='Reverse frames')
         chkImportReversed = ttk.Checkbutton(dlg, text='', variable=importReversed)
 
         riffleShuffle = tkinter.IntVar()
-        lblRiffleShuffle = tkinter.Label(
-            dlg, font=self.defaultFont, text='Riffle shuffle'
-        )
+        lblRiffleShuffle = tkinter.Label(dlg, font=self.defaultFont, text='Riffle shuffle')
         chkRiffleShuffle = ttk.Checkbutton(dlg, text='', variable=riffleShuffle)
 
         stretch = tkinter.IntVar()
@@ -3968,9 +3817,7 @@ class GifApp:
         chkStretch = ttk.Checkbutton(dlg, text='', variable=stretch)
 
         blankFrame = tkinter.IntVar()
-        lblBlankFrame = tkinter.Label(
-            dlg, font=self.defaultFont, text='Insert Blank Frames'
-        )
+        lblBlankFrame = tkinter.Label(dlg, font=self.defaultFont, text='Insert Blank Frames')
         chkBlankFrame = ttk.Checkbutton(dlg, text='', variable=blankFrame)
 
         numBlanks = tkinter.IntVar()
@@ -3988,36 +3835,26 @@ class GifApp:
         )
         numBlanks.set(1)
 
-        btnImport = tkinter.Button(
-            dlg, text=buttonTitle[blankFrame.get()], padx=4, pady=4
-        )
+        btnImport = tkinter.Button(dlg, text=buttonTitle[blankFrame.get()], padx=4, pady=4)
 
         # Place elements on grid
         rowIdx = -1
 
         rowIdx += 1
         lblStartFrame.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
-        sclStartFrame.grid(
-            row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2
-        )
+        sclStartFrame.grid(row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2)
 
         rowIdx += 1
         lblImportReversed.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
-        chkImportReversed.grid(
-            row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2
-        )
+        chkImportReversed.grid(row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2)
 
         rowIdx += 1
         lblRiffleShuffle.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
-        chkRiffleShuffle.grid(
-            row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2
-        )
+        chkRiffleShuffle.grid(row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2)
 
         rowIdx += 1
         lblStretch.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
-        chkStretch.grid(
-            row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2
-        )
+        chkStretch.grid(row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2)
 
         rowIdx += 1
         lblBlankFrame.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
@@ -4025,9 +3862,7 @@ class GifApp:
         spnBlanks.grid(row=rowIdx, column=2, sticky=tkinter.W, padx=4, pady=4)
 
         rowIdx += 1
-        btnImport.grid(
-            row=rowIdx, column=0, sticky=tkinter.EW, padx=4, pady=4, columnspan=3
-        )
+        btnImport.grid(row=rowIdx, column=0, sticky=tkinter.EW, padx=4, pady=4, columnspan=3)
 
         tooltips = {
             sclStartFrame: 'Set the position in your GIF where you want the frames to be imported. Importing at frame 0 will import frames before the first frame.',
@@ -4133,20 +3968,12 @@ class GifApp:
         cropWidth.set(sw)
         cropHeight.set(sh)
 
-        lblStartX = tkinter.Label(
-            dlg, font=self.defaultFont, text='Horizontal Start Position'
-        )
-        lblStartY = tkinter.Label(
-            dlg, font=self.defaultFont, text='Vertical Start Position'
-        )
-        lblAspectLock = tkinter.Label(
-            dlg, font=self.defaultFont, text='Maintain crop aspect ratio'
-        )
+        lblStartX = tkinter.Label(dlg, font=self.defaultFont, text='Horizontal Start Position')
+        lblStartY = tkinter.Label(dlg, font=self.defaultFont, text='Vertical Start Position')
+        lblAspectLock = tkinter.Label(dlg, font=self.defaultFont, text='Maintain crop aspect ratio')
         lblWidth = tkinter.Label(dlg, font=self.defaultFont, text='GIF Width')
         lblHeight = tkinter.Label(dlg, font=self.defaultFont, text='GIF Height')
-        lblAspectLock = tkinter.Label(
-            dlg, font=self.defaultFont, text='Maintain crop aspect ratio'
-        )
+        lblAspectLock = tkinter.Label(dlg, font=self.defaultFont, text='Maintain crop aspect ratio')
 
         spnX = tkinter.Spinbox(
             dlg,
@@ -4221,14 +4048,10 @@ class GifApp:
 
         rowIdx += 1
         lblHeight.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
-        spnHeight.grid(
-            row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2
-        )
+        spnHeight.grid(row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2)
 
         rowIdx += 1
-        btnOK.grid(
-            row=rowIdx, column=0, sticky=tkinter.EW, padx=4, pady=4, columnspan=2
-        )
+        btnOK.grid(row=rowIdx, column=0, sticky=tkinter.EW, padx=4, pady=4, columnspan=2)
 
         tooltips = {
             chkAspectLock: 'Maintain aspect ratio when adjusting width and height',
@@ -4253,9 +4076,7 @@ class GifApp:
 
         def OnCropChange(*args):
             try:
-                sx, sy, sw, sh, smaxw, smaxh, sratio = self.GetCropSettingsFromCanvas(
-                    True, False
-                )
+                sx, sy, sw, sh, smaxw, smaxh, sratio = self.GetCropSettingsFromCanvas(True, False)
             except Exception:
                 logging.error('Failed to get cropper settings from canvas')
                 return False
@@ -4395,9 +4216,7 @@ class GifApp:
         sclStartFrame.grid(row=0, column=1, sticky=tkinter.W, padx=4, pady=4)
         lblEndFrame.grid(row=1, column=0, sticky=tkinter.W, padx=4, pady=4)
         sclEndFrame.grid(row=1, column=1, sticky=tkinter.W, padx=4, pady=4)
-        btnCreateFade.grid(
-            row=2, column=0, sticky=tkinter.EW, padx=4, pady=4, columnspan=2
-        )
+        btnCreateFade.grid(row=2, column=0, sticky=tkinter.EW, padx=4, pady=4, columnspan=2)
 
         tooltips = {
             sclStartFrame: 'Frame to start crossfade. If greater than end frame, crossfade will loop around. To make cross fade effective, make sure you include an equal number of frames on either side of the transition point.',
@@ -4414,9 +4233,7 @@ class GifApp:
             btnCreateFade.configure(state='disabled')
 
             if self.gif is not None and not self.gif.CreateCrossFade(start, end):
-                self.Alert(
-                    'Cross-fade Error', 'Make sure your range spans at least 3 frames'
-                )
+                self.Alert('Cross-fade Error', 'Make sure your range spans at least 3 frames')
                 btnCreateFade.configure(state='normal')
                 return False
 
@@ -4549,37 +4366,25 @@ class GifApp:
 
         rowIdx += 1
         lblPath.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
-        txtPath.grid(
-            row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=5
-        )
+        txtPath.grid(row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=5)
         btnChooseFile.grid(row=rowIdx, column=6, sticky=tkinter.EW, padx=4, pady=4)
 
         rowIdx += 1
         lblStart.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
 
-        spnAudioStartTimeMin.grid(
-            row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4
-        )
+        spnAudioStartTimeMin.grid(row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4)
         lblAudioMinSep.grid(row=rowIdx, column=2, sticky=tkinter.W, padx=4, pady=4)
-        spnAudioStartTimeSec.grid(
-            row=rowIdx, column=3, sticky=tkinter.W, padx=4, pady=4
-        )
+        spnAudioStartTimeSec.grid(row=rowIdx, column=3, sticky=tkinter.W, padx=4, pady=4)
         lblAudioSecSep.grid(row=rowIdx, column=4, sticky=tkinter.W, padx=4, pady=4)
-        spnAudioStartTimeMilli.grid(
-            row=rowIdx, column=5, sticky=tkinter.W, padx=4, pady=4
-        )
+        spnAudioStartTimeMilli.grid(row=rowIdx, column=5, sticky=tkinter.W, padx=4, pady=4)
         btnPreview.grid(row=rowIdx, column=6, sticky=tkinter.EW, padx=4, pady=4)
 
         rowIdx += 1
         lblVolume.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
-        spnVolume.grid(
-            row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2
-        )
+        spnVolume.grid(row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=2)
 
         rowIdx += 1
-        btnOk.grid(
-            row=rowIdx, column=0, sticky=tkinter.EW, padx=4, pady=4, columnspan=7
-        )
+        btnOk.grid(row=rowIdx, column=0, sticky=tkinter.EW, padx=4, pady=4, columnspan=7)
 
         tooltips = {
             btnChooseFile: 'Click to start download of a URL, or to browse for a local file',
@@ -4609,9 +4414,7 @@ class GifApp:
                 # They're selecting a file
                 audioPath = tkinter.filedialog.askopenfilename(
                     parent=dlg,
-                    filetypes=[
-                        ('Audio file', ('*.mp3', '*.aac', '*.wav', '*.ogg', '*.m4a'))
-                    ],
+                    filetypes=[('Audio file', ('*.mp3', '*.aac', '*.wav', '*.ogg', '*.m4a'))],
                 )
                 txtPath.delete(0, tkinter.END)
                 if audioPath is not None:
@@ -4637,12 +4440,8 @@ class GifApp:
 
             if AudioFileExists():
                 self.audioChanges += self.conf.SetParam('audio', 'path', txtPath.get())
-                self.audioChanges += self.conf.SetParam(
-                    'audio', 'startTime', str(GetStartTime())
-                )
-                self.audioChanges += self.conf.SetParam(
-                    'audio', 'volume', str(volume.get())
-                )
+                self.audioChanges += self.conf.SetParam('audio', 'startTime', str(GetStartTime()))
+                self.audioChanges += self.conf.SetParam('audio', 'volume', str(volume.get()))
 
                 # audioChanged = False
                 btnPreview.configure(state='normal')
@@ -4671,14 +4470,12 @@ class GifApp:
                 closeDialog = True
             elif PrepareAudio():
                 # Do it automatically
-                if self.gif.GetFinalOutputFormat() == 'gif':
+                if self.gif.GetFinalOutputFormat() == igf_paths.EXT_GIF:
                     self.ChangeFileFormat('mp4')
 
                 closeDialog = True
             else:
-                self.Alert(
-                    'Audio Problems', 'Something is wrong with your audio settings'
-                )
+                self.Alert('Audio Problems', 'Something is wrong with your audio settings')
 
             # Should we close the audio dialog?
             if closeDialog:
@@ -4723,9 +4520,7 @@ class GifApp:
         brushSize.set(defBrushSize)
 
         # Create elements
-        canvasContainer = tkinter.LabelFrame(
-            dlg, text=' Paint the area you want to unfreeze '
-        )
+        canvasContainer = tkinter.LabelFrame(dlg, text=' Paint the area you want to unfreeze ')
         paintCanvas = tkinter.Canvas(
             canvasContainer,
             width=int(self.gif.GetVideoWidth() * scaleFactor),
@@ -4751,9 +4546,7 @@ class GifApp:
             repeatinterval=30,
             state='readonly',
         )
-        img = PIL.Image.open(
-            self.gif.GetExtractedImageList()[self.GetThumbNailIndex() - 1]
-        )
+        img = PIL.Image.open(self.gif.GetExtractedImageList()[self.GetThumbNailIndex() - 1])
         img = img.resize(
             (
                 int(self.gif.GetVideoWidth() * scaleFactor),
@@ -4774,15 +4567,11 @@ class GifApp:
         btnReset.grid(row=rowIdx, column=3, sticky=tkinter.EW, padx=4, pady=4)
 
         rowIdx += 1
-        canvasContainer.grid(
-            row=rowIdx, column=0, columnspan=4, sticky=tkinter.W, padx=4, pady=4
-        )
+        canvasContainer.grid(row=rowIdx, column=0, columnspan=4, sticky=tkinter.W, padx=4, pady=4)
         paintCanvas.grid(row=0, column=0, sticky=tkinter.W, padx=4, pady=4)
 
         rowIdx += 1
-        btnOK.grid(
-            row=rowIdx, column=0, columnspan=4, sticky=tkinter.EW, padx=4, pady=4
-        )
+        btnOK.grid(row=rowIdx, column=0, columnspan=4, sticky=tkinter.EW, padx=4, pady=4)
 
         tooltips = {
             btnOK: 'All done!',
@@ -4811,9 +4600,7 @@ class GifApp:
                 x1, y1 = (x - halfpb), (y - halfpb)
                 x2, y2 = (x + halfpb), (y + halfpb)
                 if self.maskDraw is not None:
-                    self.maskDraw.ellipse(
-                        (x1, y1, x2, y2), outline='#000000', fill='#000000'
-                    )
+                    self.maskDraw.ellipse((x1, y1, x2, y2), outline='#000000', fill='#000000')
 
         def WriteToCanvas():
             for e in self.maskEventList:
@@ -4849,9 +4636,7 @@ class GifApp:
                 self.maskEdited = True
 
             paintCanvas.delete('paint')
-            paintCanvas.create_image(
-                0, 0, image=photoImg, tag='frame', anchor=tkinter.NW
-            )
+            paintCanvas.create_image(0, 0, image=photoImg, tag='frame', anchor=tkinter.NW)
 
             return True
 
@@ -4968,18 +4753,12 @@ class GifApp:
         else:
             audioState = 'disabled'
 
-        chkGrayScale = ttk.Checkbutton(
-            dlg, text='Black & White', variable=self.isGrayScale
-        )
+        chkGrayScale = ttk.Checkbutton(dlg, text='Black & White', variable=self.isGrayScale)
         chkSharpen = ttk.Checkbutton(dlg, text='Enhance', variable=self.isSharpened)
-        chkDesaturate = ttk.Checkbutton(
-            dlg, text='Color Fade', variable=self.isDesaturated
-        )
+        chkDesaturate = ttk.Checkbutton(dlg, text='Color Fade', variable=self.isDesaturated)
         chkSepia = ttk.Checkbutton(dlg, text='Sepia Tone', variable=self.isSepia)
         chkColorTint = ttk.Checkbutton(dlg, text='Colorize', variable=self.isColorTint)
-        chkEdgeFade = ttk.Checkbutton(
-            dlg, text='Burnt Corners', variable=self.isFadedEdges
-        )
+        chkEdgeFade = ttk.Checkbutton(dlg, text='Burnt Corners', variable=self.isFadedEdges)
         chkBorder = ttk.Checkbutton(dlg, text='Border', variable=self.isBordered)
         chkBlurred = ttk.Checkbutton(dlg, text='Blur', variable=self.isBlurred)
         chkNashville = ttk.Checkbutton(dlg, text='Nashville', variable=self.isNashville)
@@ -5172,9 +4951,7 @@ class GifApp:
         btnEditSound.grid(row=rowIdx, column=2, sticky=tkinter.W, padx=4, pady=1)
 
         rowIdx += 1
-        btnOK.grid(
-            row=rowIdx, column=0, sticky=tkinter.EW, padx=4, pady=4, columnspan=4
-        )
+        btnOK.grid(row=rowIdx, column=0, sticky=tkinter.EW, padx=4, pady=4, columnspan=4)
 
         tooltips = {
             chkGrayScale: 'More specifically grayscale. Converting your GIF to grayscale will reduce file size. This is the last filter applied in the chain.',
@@ -5293,9 +5070,7 @@ class GifApp:
         logging.info('Font count: %d' % (fonts.GetFontCount()))
 
         if fonts.GetFontCount() == 0:
-            tkinter.messagebox.showinfo(
-                'Font Issue', "I wasn't able to find any fonts :("
-            )
+            tkinter.messagebox.showinfo('Font Issue', "I wasn't able to find any fonts :(")
             return False
 
         # Default form values
@@ -5305,9 +5080,7 @@ class GifApp:
             )
 
             try:
-                positionIdx = positions.index(
-                    self.conf.GetParam('captiondefaults', 'position')
-                )
+                positionIdx = positions.index(self.conf.GetParam('captiondefaults', 'position'))
             except Exception:
                 positionIdx = 7
 
@@ -5315,9 +5088,7 @@ class GifApp:
                 styleList = fonts.GetFontAttributeList(
                     self.conf.GetParam('captiondefaults', 'captionFont')
                 )
-                styleIdx = styleList.index(
-                    self.conf.GetParam('captiondefaults', 'fontStyle')
-                )
+                styleIdx = styleList.index(self.conf.GetParam('captiondefaults', 'fontStyle'))
             except Exception:
                 styleIdx = 0
 
@@ -5327,8 +5098,8 @@ class GifApp:
             self.OnCaptionConfigDefaults['defaultFontColor'] = self.conf.GetParam(
                 'captiondefaults', 'fontColor'
             )
-            self.OnCaptionConfigDefaults['defaultFontOutlineColor'] = (
-                self.conf.GetParam('captiondefaults', 'outlineColor')
+            self.OnCaptionConfigDefaults['defaultFontOutlineColor'] = self.conf.GetParam(
+                'captiondefaults', 'outlineColor'
             )
             self.OnCaptionConfigDefaults['defaultFontIdx'] = recommendedFont
             self.OnCaptionConfigDefaults['defaultFontStyleIdx'] = styleIdx
@@ -5406,9 +5177,7 @@ class GifApp:
         cbxStyle.current(self.OnCaptionConfigDefaults['defaultFontStyleIdx'])
 
         positioning = tkinter.StringVar()
-        lblPosition = tkinter.Label(
-            captionDlg, font=self.defaultFont, text='Positioning'
-        )
+        lblPosition = tkinter.Label(captionDlg, font=self.defaultFont, text='Positioning')
         cbxPosition = ttk.Combobox(
             captionDlg,
             textvariable=positioning,
@@ -5418,14 +5187,10 @@ class GifApp:
         )
         cbxPosition.current(self.OnCaptionConfigDefaults['defaultPosition'])
 
-        btnCaptionFontColor = tkinter.Button(
-            captionDlg, font=self.defaultFont, text='Color Picker'
-        )
+        btnCaptionFontColor = tkinter.Button(captionDlg, font=self.defaultFont, text='Color Picker')
 
         numFrames = self.gif.GetNumFrames()
-        lblStartFrame = tkinter.Label(
-            captionDlg, font=self.defaultFont, text='Start Frame'
-        )
+        lblStartFrame = tkinter.Label(captionDlg, font=self.defaultFont, text='Start Frame')
         sclStartFrame = tkinter.Scale(
             captionDlg,
             font=self.defaultFontTiny,
@@ -5509,14 +5274,10 @@ class GifApp:
             repeatinterval=60,
             state='readonly',
         )
-        outlineThickness.set(
-            self.OnCaptionConfigDefaults['defaultFontOutlineThickness']
-        )
+        outlineThickness.set(self.OnCaptionConfigDefaults['defaultFontOutlineThickness'])
 
         dropShadow = tkinter.IntVar()
-        chkdropShadow = tkinter.Checkbutton(
-            captionDlg, text='Shadow', variable=dropShadow
-        )
+        chkdropShadow = tkinter.Checkbutton(captionDlg, text='Shadow', variable=dropShadow)
         dropShadow.set(self.OnCaptionConfigDefaults['defaultDropShadow'])
 
         lblFilters = tkinter.Label(captionDlg, font=self.defaultFont, text='Effects')
@@ -5543,9 +5304,7 @@ class GifApp:
         )
         opacity.set(self.OnCaptionConfigDefaults['defaultOpacity'])
 
-        lblLineSpacing = tkinter.Label(
-            captionDlg, font=self.defaultFont, text='Line Space Adj.'
-        )
+        lblLineSpacing = tkinter.Label(captionDlg, font=self.defaultFont, text='Line Space Adj.')
         lineSpacing = tkinter.IntVar()
         spnSpacing = tkinter.Spinbox(
             captionDlg,
@@ -5566,9 +5325,7 @@ class GifApp:
         # Place items on grid
         rowIdx = 0
         lblCaption.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
-        txtCaption.grid(
-            row=rowIdx, column=1, sticky=tkinter.EW, padx=4, pady=4, columnspan=3
-        )
+        txtCaption.grid(row=rowIdx, column=1, sticky=tkinter.EW, padx=4, pady=4, columnspan=3)
 
         rowIdx += 1
         lblFont.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
@@ -5578,9 +5335,7 @@ class GifApp:
 
         rowIdx += 1
         lblSample.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
-        lblFontPreview.grid(
-            row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=3
-        )
+        lblFontPreview.grid(row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4, columnspan=3)
 
         rowIdx += 1
         lblStyle.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
@@ -5593,12 +5348,8 @@ class GifApp:
         rowIdx += 1
         lblOutline.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
 
-        spnCaptionFontOutlineSize.grid(
-            row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4
-        )
-        chkdropShadow.grid(
-            row=rowIdx, column=2, sticky=tkinter.W, padx=0, pady=4, columnspan=2
-        )
+        spnCaptionFontOutlineSize.grid(row=rowIdx, column=1, sticky=tkinter.W, padx=4, pady=4)
+        chkdropShadow.grid(row=rowIdx, column=2, sticky=tkinter.W, padx=0, pady=4, columnspan=2)
 
         rowIdx += 1
         lblOpacity.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
@@ -5610,32 +5361,22 @@ class GifApp:
 
         rowIdx += 1
         lblFilters.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
-        chkApplyFxToText.grid(
-            row=rowIdx, column=1, sticky=tkinter.W, padx=0, pady=4, columnspan=1
-        )
+        chkApplyFxToText.grid(row=rowIdx, column=1, sticky=tkinter.W, padx=0, pady=4, columnspan=1)
 
         rowIdx += 1
         lblAnimate.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
         cbxAnimateType.grid(row=rowIdx, column=1, sticky=tkinter.EW, padx=4, pady=4)
-        cbxAnimate.grid(
-            row=rowIdx, column=2, sticky=tkinter.EW, padx=4, pady=4, columnspan=2
-        )
+        cbxAnimate.grid(row=rowIdx, column=2, sticky=tkinter.EW, padx=4, pady=4, columnspan=2)
 
         rowIdx += 1
         lblStartFrame.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
-        sclStartFrame.grid(
-            row=rowIdx, column=1, sticky=tkinter.EW, padx=4, pady=4, columnspan=3
-        )
+        sclStartFrame.grid(row=rowIdx, column=1, sticky=tkinter.EW, padx=4, pady=4, columnspan=3)
         rowIdx += 1
         lblEndFrame.grid(row=rowIdx, column=0, sticky=tkinter.W, padx=4, pady=4)
-        sclEndFrame.grid(
-            row=rowIdx, column=1, sticky=tkinter.EW, padx=4, pady=4, columnspan=3
-        )
+        sclEndFrame.grid(row=rowIdx, column=1, sticky=tkinter.EW, padx=4, pady=4, columnspan=3)
 
         rowIdx += 1
-        btnOk.grid(
-            row=rowIdx, column=0, sticky=tkinter.EW, padx=4, pady=4, columnspan=4
-        )
+        btnOk.grid(row=rowIdx, column=0, sticky=tkinter.EW, padx=4, pady=4, columnspan=4)
 
         tooltips = {
             txtCaption: 'Type your text here.',
@@ -5662,10 +5403,7 @@ class GifApp:
         def OnFontUpdate(*args):
             # Did the font change?
             fontChanged = False
-            if (
-                cbxFontFamily.current()
-                != self.OnCaptionConfigDefaults['defaultFontIdx']
-            ):
+            if cbxFontFamily.current() != self.OnCaptionConfigDefaults['defaultFontIdx']:
                 fontChanged = True
 
             if fontChanged:
@@ -5686,9 +5424,7 @@ class GifApp:
             self.OnCaptionConfigDefaults['defaultFontIdx'] = cbxFontFamily.current()
             self.OnCaptionConfigDefaults['defaultFontStyleIdx'] = cbxStyle.current()
             self.OnCaptionConfigDefaults['defaultPosition'] = cbxPosition.current()
-            self.OnCaptionConfigDefaults['defaultFontOutlineThickness'] = (
-                outlineThickness.get()
-            )
+            self.OnCaptionConfigDefaults['defaultFontOutlineThickness'] = outlineThickness.get()
             self.OnCaptionConfigDefaults['defaultOpacity'] = opacity.get()
             self.OnCaptionConfigDefaults['defaultDropShadow'] = dropShadow.get()
             self.OnCaptionConfigDefaults['defaultLineSpacing'] = lineSpacing.get()
@@ -5749,43 +5485,29 @@ class GifApp:
                 self.captionChanges += self.conf.SetParam(confName, 'frameStart', '')
                 self.captionChanges += self.conf.SetParam(confName, 'frameEnd', '')
                 self.captionChanges += self.conf.SetParam(confName, 'color', '')
-                self.captionChanges += self.conf.SetParam(
-                    confName, 'animationEnvelope', ''
-                )
+                self.captionChanges += self.conf.SetParam(confName, 'animationEnvelope', '')
                 self.captionChanges += self.conf.SetParam(confName, 'animationType', '')
                 self.captionChanges += self.conf.SetParam(confName, 'positioning', '')
                 self.captionChanges += self.conf.SetParam(confName, 'outlineColor', '')
-                self.captionChanges += self.conf.SetParam(
-                    confName, 'outlineThickness', ''
-                )
+                self.captionChanges += self.conf.SetParam(confName, 'outlineThickness', '')
                 self.captionChanges += self.conf.SetParam(confName, 'opacity', '')
                 self.captionChanges += self.conf.SetParam(confName, 'dropShadow', '')
                 self.captionChanges += self.conf.SetParam(confName, 'applyFx', '')
-                self.captionChanges += self.conf.SetParam(
-                    confName, 'interlineSpacing', ''
-                )
+                self.captionChanges += self.conf.SetParam(confName, 'interlineSpacing', '')
 
                 listValues[captionIdx] = '[deleted]'
             else:
                 self.captionChanges += self.conf.SetParam(confName, 'text', caption)
-                self.captionChanges += self.conf.SetParam(
-                    confName, 'font', fontFamily.get()
-                )
-                self.captionChanges += self.conf.SetParam(
-                    confName, 'style', fontStyle.get()
-                )
+                self.captionChanges += self.conf.SetParam(confName, 'font', fontFamily.get())
+                self.captionChanges += self.conf.SetParam(confName, 'style', fontStyle.get())
                 self.captionChanges += self.conf.SetParam(
                     confName, 'size', spnCaptionFontSize.get()
                 )
                 self.captionChanges += self.conf.SetParam(
                     confName, 'frameStart', sclStartFrame.get()
                 )
-                self.captionChanges += self.conf.SetParam(
-                    confName, 'frameEnd', sclEndFrame.get()
-                )
-                self.captionChanges += self.conf.SetParam(
-                    confName, 'color', lblFontPreview['fg']
-                )
+                self.captionChanges += self.conf.SetParam(confName, 'frameEnd', sclEndFrame.get())
+                self.captionChanges += self.conf.SetParam(confName, 'color', lblFontPreview['fg'])
                 self.captionChanges += self.conf.SetParam(
                     confName, 'animationEnvelope', animateSetting.get()
                 )
@@ -5803,15 +5525,9 @@ class GifApp:
                 self.captionChanges += self.conf.SetParam(
                     confName, 'outlineThickness', outlineThickness.get()
                 )
-                self.captionChanges += self.conf.SetParam(
-                    confName, 'opacity', opacity.get()
-                )
-                self.captionChanges += self.conf.SetParam(
-                    confName, 'dropShadow', dropShadow.get()
-                )
-                self.captionChanges += self.conf.SetParam(
-                    confName, 'applyFx', applyFxToText.get()
-                )
+                self.captionChanges += self.conf.SetParam(confName, 'opacity', opacity.get())
+                self.captionChanges += self.conf.SetParam(confName, 'dropShadow', dropShadow.get())
+                self.captionChanges += self.conf.SetParam(confName, 'applyFx', applyFxToText.get())
                 self.captionChanges += self.conf.SetParam(
                     confName, 'interlineSpacing', lineSpacing.get()
                 )
