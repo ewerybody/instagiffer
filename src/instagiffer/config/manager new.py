@@ -1,7 +1,7 @@
 """
 Configuration manager for Instagiffer.
 
-Implements VS Code-style layered configuration:
+Implements layered configuration:
 1. Default settings (shipped with app - read-only)
 2. User settings (overrides defaults)
 """
@@ -14,12 +14,6 @@ from typing import Any
 from pydantic import ValidationError
 
 from .schema import InstaConfig
-
-APP_NAME = 'instagiffer'
-DEFAULT_TMP_NAME = f'{APP_NAME}_temp'
-DEFAULTS_NAME = 'defaults.json'
-DEFAULT_CONFIG_NAME = 'instagiffer_config.json'
-CONFIG_DIR = '.config'
 
 logger = logging.getLogger(__name__)
 
@@ -49,6 +43,8 @@ def deep_merge(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]
 class ConfigManager:
     """Manages application configuration with layered overrides."""
 
+    DEFAULT_CONFIG_NAME = 'instagiffer_config.json'
+
     def __init__(self, user_config_path: Path | str | None = None):
         """
         Initialize config manager.
@@ -70,22 +66,22 @@ class ConfigManager:
     def _get_defaults_path() -> Path:
         """Get path to shipped defaults.json."""
         # defaults.json is in the same directory as this file
-        return Path(__file__).parent / DEFAULTS_NAME
+        return Path(__file__).parent / 'defaults.json'
 
     @staticmethod
     def _resolve_user_config_path(config_path: Path | str | None) -> Path:
         """Resolve user config file path."""
         if config_path is None:
             # Use platform-appropriate config directory
-            config_dir = Path.home() / CONFIG_DIR / APP_NAME
+            config_dir = Path.home() / '.config' / 'instagiffer'
             config_dir.mkdir(parents=True, exist_ok=True)
-            return config_dir / DEFAULT_CONFIG_NAME
+            return config_dir / ConfigManager.DEFAULT_CONFIG_NAME
 
         return Path(config_path)
 
     def _load_defaults(self) -> dict[str, Any]:
         """Load default configuration from shipped defaults.json."""
-        if not self.defaults_path.is_file():
+        if not self.defaults_path.exists():
             raise RuntimeError(
                 f'defaults.json not found at {self.defaults_path}. '
                 'This file should be shipped with the application.'
@@ -93,8 +89,8 @@ class ConfigManager:
 
         logger.info(f'Loading defaults from {self.defaults_path}')
 
-        with open(self.defaults_path, encoding='utf-8') as file_obj:
-            return json.load(file_obj)
+        with open(self.defaults_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
 
     def _load_user_config(self) -> dict[str, Any]:
         """Load user configuration overrides."""
@@ -104,11 +100,10 @@ class ConfigManager:
 
         try:
             logger.info(f'Loading user config from {self.user_config_path}')
-            with open(self.user_config_path, encoding='utf-8') as file_obj:
-                return json.load(file_obj)
-
-        except (json.JSONDecodeError, OSError) as error:
-            logger.error(f'Failed to load user config: {error}. Using defaults.')
+            with open(self.user_config_path, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except (json.JSONDecodeError, OSError) as e:
+            logger.error(f'Failed to load user config: {e}. Using defaults.')
             return {}
 
     def _create_merged_config(self) -> InstaConfig:
@@ -131,8 +126,6 @@ class ConfigManager:
         Args:
             full_config: If True, saves complete config. If False, only saves overrides.
         """
-        logger.info(f'Saving user config to {self.user_config_path}')
-
         # Ensure directory exists
         self.user_config_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -145,7 +138,7 @@ class ConfigManager:
             data = self._compute_overrides()
 
             # Auto-cleanup: if no overrides, delete the user config file
-            if not data :
+            if not data:
                 logger.info('No user overrides - removing user config file')
                 if self.user_config_path.exists():
                     self.user_config_path.unlink()
@@ -153,8 +146,8 @@ class ConfigManager:
 
             logger.info(f'Saving user config to {self.user_config_path}')
 
-        with open(self.user_config_path, 'w', encoding='utf-8') as file_obj:
-            json.dump(data, file_obj, indent=2, ensure_ascii=False)
+        with open(self.user_config_path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
 
         logger.info('User config saved successfully')
 
@@ -259,7 +252,7 @@ class ConfigManager:
         self.config = InstaConfig.model_validate(self.defaults)
 
         # Delete user config file
-        if self.user_config_path.is_fifo():
+        if self.user_config_path.exists():
             self.user_config_path.unlink()
             logger.info(f'Deleted user config: {self.user_config_path}')
 
@@ -276,7 +269,7 @@ class ConfigManager:
             # Use platform-appropriate temp directory
             import tempfile
 
-            work_dir = Path(tempfile.gettempdir()) / APP_NAME
+            work_dir = Path(tempfile.gettempdir()) / 'instagiffer'
 
         work_dir.mkdir(parents=True, exist_ok=True)
         return work_dir
@@ -315,7 +308,9 @@ class ConfigManager:
 
             # Safety check
             if counter > 9999:
-                raise RuntimeError('Too many output files! Clean up or enable overwrite.')
+                raise RuntimeError(
+                    'Too many output files! Clean up or enable overwrite.'
+                )
 
     def get_fail_safe_dir(self) -> Path:
         """
@@ -332,9 +327,19 @@ class ConfigManager:
             fail_safe = self.config.paths.fail_safe_dir
         else:
             # Platform-specific defaults
+            import sys
             import tempfile
 
-            fail_safe = Path(tempfile.gettempdir()) / DEFAULT_TMP_NAME
+            if sys.platform == 'win32':
+                # Windows: Use C:/instagiffer_temp if C: exists, else temp
+                c_drive = Path('C:/')
+                if c_drive.exists():
+                    fail_safe = c_drive / 'instagiffer_temp'
+                else:
+                    fail_safe = Path(tempfile.gettempdir()) / 'instagiffer_temp'
+            else:
+                # Mac/Linux: Use /tmp/instagiffer
+                fail_safe = Path('/tmp/instagiffer')
 
         # Create directory if needed
         fail_safe.mkdir(parents=True, exist_ok=True)
