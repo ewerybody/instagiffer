@@ -1,4 +1,4 @@
 /.vscode
 /build
-instagiffer-event.log
+*.log
 _ *
