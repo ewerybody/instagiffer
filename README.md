@@ -1,4 +1,4 @@
-InstaGiffer
+Instagiffer
 ===========
 
 ![Logo](doc/graphics/app_icon.png "Instagiffer Logo")
@@ -9,7 +9,7 @@ Instagiffer was designed during an era where websites would limit upload file si
 
 # Instagiffer Architecture #
 
-Instagiffer is a monolithic Python script. The UI is developed in Tkinter. GIF generation is performed using FFMpeg which is used to extract frames from videos, and ImageMagik, which is used for effects, cropping, text, and GIF compression. Videos are downloaded from YouTube using youtube-dl. Instagiffer simply calls these three processes to generate GIFs.
+The UI is developed in Tkinter. GIF generation is performed using FFMpeg which is used to extract frames from videos, and ImageMagik, which is used for effects, cropping, text, and GIF compression. Videos are downloaded from YouTube using youtube-dl. Instagiffer simply calls these three processes to generate GIFs.
 
 The Instagiffer binary is generated using py2app (Mac OS) and cxFreeze (Windows). The Windows installer is assembled using the free Inno Setup utility.
 
@@ -18,13 +18,10 @@ The Instagiffer binary is generated using py2app (Mac OS) and cxFreeze (Windows)
 ## Windows ##
 
 The following prerequisites are required to do a Windows build:
- * Sublime Text 3 (Preferred editor, optional)
-   * Package Control
  * Inno Setup (Latest)
- * Python (2.7.12)
- * Github Client (Latest)
- * Pillow 3.4.2
- * cx_Freeze (4.3.x) - don't use version 5!
+ * Python (Latest)
+ * Pillow (Latest)
+ * cx_Freeze (Latest)
  * [PyWin32 (2.19)](https://sourceforge.net/projects/pywin32/files/pywin32/Build%20219/pywin32-219.win32-py2.7.exe/download)
  * Update Instagiffer\bindeps
    * [Latest FFMpeg 32-bit static build](https://ffmpeg.zeranoe.com/builds/)
@@ -53,9 +50,9 @@ Macs require a little more work:
     * xcode-select --install # command line tools
     * sudo xcode-build -license
  2. Download MacPorts package and install: https://www.macports.org/install.php
-    * sudo port -v selfupdate 
+    * sudo port -v selfupdate
  3. sudo vi `port file ImageMagick`
- 4. Add --enable-delegate-build, --disable-shared 
+ 4. Add --enable-delegate-build, --disable-shared
  5. sudo port install ImageMagick -x11 +universal  # this takes about 2 hours
  6. Copy ImageMagick binaries to macdeps/ using the following bash:
 
@@ -113,7 +110,7 @@ Before you release, double-check:
 
 ## Mac ##
 
- * Run make_app.sh to produce a DMG installer. When the DMG pops up, move the 
+ * Run make_app.sh to produce a DMG installer. When the DMG pops up, move the
    icon into the right position.
 
 # Testing #
@@ -125,10 +122,10 @@ Before you release, double-check:
 
 Here are some things I regression test on each release (based on bugs I've encountered in the past)
 
-* Online downloads    
+* Online downloads
   * Youtube (especially popular music videos)
   * VEVO
-  * DailyMotion, and Metacafe 
+  * DailyMotion, and Metacafe
 * Videos where h > w, w == h, w > h
 * Invalid video formats
 * Cellphone videos shot in portrait and landscape
@@ -163,7 +160,7 @@ Here are some things I regression test on each release (based on bugs I've encou
 
 ## Color ##
 ![Instagiffer Color Swatch](doc/graphics/color.png?raw=true "Instagiffer Color Swatch")
-Main Color: #395976 
+Main Color: #395976
 
 ## Font ##
 
