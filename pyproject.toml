@@ -27,7 +27,7 @@ dependencies = [
     "pillow>=12.1.0",
     "pydantic>=2.0",
     "pydantic-settings>=2.0",
-    "pywin32>=311",
+    "pywin32>=311; sys_platform == 'win32'",
     "tk>=0.1.0",
     "yt-dlp>=2024.0",
 ]
@@ -47,7 +47,7 @@ instagiffer = "instagiffer.main:main"
 instagiffer-cli = "instagiffer.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/ewerybody/instagiffer"
+Homepage = "http://instagiffer.com"
 Repository = "https://github.com/ewerybody/instagiffer"
 "Bug Tracker" = "https://github.com/ewerybody/instagiffer/issues"
 
@@ -55,7 +55,7 @@ Repository = "https://github.com/ewerybody/instagiffer"
 dev = ["pytest", "pytest-cov"]
 
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["."]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -107,7 +107,8 @@ ignore = [
     "E501", # line too long (handled by black)
     "B008", # do not perform function calls in argument defaults
 ]
-
+[tool.ruff.format]
+quote-style = "single"
 [tool.ruff.isort]
 known-first-party = ["instagiffer"]
 
@@ -123,3 +124,10 @@ warn_redundant_casts = true
 warn_unused_ignores = true
 warn_no_return = true
 strict_equality = true
+
+
+[tool.uv]
+required-environments = [
+    "sys_platform == 'win32'",
+    "sys_platform == 'linux'",
+]

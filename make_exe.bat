@@ -21,7 +21,7 @@ if exist "build" (
 
 rem ***** create the exe
 echo Running build script ...
-"%PYTHON%" setup-win-cx_freeze.py build
+"%PYTHON%" setup-cx_freeze.py build
 
 IF NOT ERRORLEVEL 1 GOTO no_error
 pause "Freeze failed. See error log"

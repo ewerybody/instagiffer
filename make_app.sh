@@ -31,7 +31,7 @@ function optimize_binaries(){
 
 
 function make_app(){
-	python -m compileall instagiffer.py 
+	python -m compileall instagiffer.py
 	echo "Building Mac release with Py2App"
 	if ! python setup-mac-py2app.py py2app ; then
 		echo "Error building app with py2app"
@@ -69,7 +69,7 @@ function make_dmg(){
 	done
 
 	# Detach
-	hdiutil detach /dev/disk1s2	
+	hdiutil detach /dev/disk1s2
 
 	# Convert to a DMG
 	hdiutil convert $src_img -format UDZO -o $dst_img -imagekey zlib-level=9
