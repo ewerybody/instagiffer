@@ -25,7 +25,7 @@ The following prerequisites are required to do a Windows build:
  * cx_Freeze (latest)
  * Inno Setup (Latest)
  * [PyWin32 (2.19)](https://sourceforge.net/projects/pywin32/files/pywin32/Build%20219/pywin32-219.win32-py2.7.exe/download)
- * Update Instagiffer\bindeps
+ * Update Instagiffer\windeps
    * [Latest FFMpeg 32-bit static build](https://ffmpeg.zeranoe.com/builds/)
    * [Latest convert.exe and mogrify.exe from Imagemagick Portable x86 zip](http://www.imagemagick.org/script/binary-releases.php)
    * [Latest youtube-dl binary release](https://rg3.github.io/youtube-dl/download.html)
