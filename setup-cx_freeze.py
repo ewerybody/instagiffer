@@ -98,7 +98,4 @@ print('... cx_Freeze Done!')
 
 if sys.platform in ('darwin', 'linux'):
     # Make instagiffer executable
-    os.chmod(
-        f'{data["build_path"]}/{NAME}',
-        0o755,
-    )
+    os.chmod(os.path.join(data['build_path'], NAME), 0o755)
