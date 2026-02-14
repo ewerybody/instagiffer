@@ -8,7 +8,7 @@ version = "1.8.1"
 description = "Create optimized GIFs from videos, images, and screen captures"
 readme = "README.md"
 requires-python = ">=3.14"
-# license = { text = "BSD-3-Clause" }
+license = { text = "BSD-4-Clause" }
 authors = [
     { name = "Justin Todd", email = "instagiffer@gmail.com" },
     { name = "Eric Werner (refactor)", email = "ewerybody@gmail.com" },
@@ -23,24 +23,18 @@ classifiers = [
 ]
 
 dependencies = [
-    "cx-freeze>=8.5.3",
     "pillow>=12.1.0",
-    "pydantic>=2.0",
-    "pydantic-settings>=2.0",
     "pywin32>=311; sys_platform == 'win32'",
     "tk>=0.1.0",
-    "yt-dlp>=2024.0",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=7.0",
-    "pytest-cov>=4.0",
-    "pytest-mock>=3.0",
-    "pytest-asyncio>=0.23",
-    "ruff>=0.1.0",
-    "mypy>=1.7",
+    "cx-freeze>=8.5.3",
 ]
+
+[dependency-groups]
+dev = ["cx-freeze"]
 
 [project.scripts]
 instagiffer = "instagiffer.main:main"
@@ -51,45 +45,8 @@ Homepage = "http://instagiffer.com"
 Repository = "https://github.com/ewerybody/instagiffer"
 "Bug Tracker" = "https://github.com/ewerybody/instagiffer/issues"
 
-[dependency-groups]
-dev = ["pytest", "pytest-cov"]
-
 [tool.setuptools.packages.find]
 where = ["."]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-source = ["src"]
-pythonpath = ["src"]
-python_files = ["test_*.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-addopts = [
-    "--cov=src/instagiffer",
-    "--cov-report=html",
-    "--cov-report=term-missing",
-    "-v",
-]
-
-[tool.coverage.run]
-source = ["src"]
-omit = ["*/tests/*", "*/migrations/*"]
-
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "def __repr__",
-    "raise AssertionError",
-    "raise NotImplementedError",
-    "if __name__ == .__main__.:",
-    "if TYPE_CHECKING:",
-    "@abstract",
-]
-
-[tool.black]
-line-length = 100
-target-version = ["py314"]
-include = '\.pyi?$'
 
 [tool.ruff]
 line-length = 100
@@ -112,22 +69,6 @@ quote-style = "single"
 [tool.ruff.isort]
 known-first-party = ["instagiffer"]
 
-[tool.mypy]
-python_version = "3.14"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-check_untyped_defs = true
-no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_no_return = true
-strict_equality = true
-
 
 [tool.uv]
-required-environments = [
-    "sys_platform == 'win32'",
-    "sys_platform == 'linux'",
-]
+required-environments = ["sys_platform == 'win32'", "sys_platform == 'linux'"]
