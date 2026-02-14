@@ -41,7 +41,7 @@ PLATFORM_DATA = {
         'icon': f'{NAME}.ico',
     },
     'linux': {
-        'files': ['uninstall.ico', 'instagiffer.ico', 'instagiffer.conf'],
+        'files': ['instagiffer.conf'],
         'base': None,
         'build_path': os.path.join(
             BUILD_ROOT, f'exe.linux-x86_64-{sys.version_info.major}.{sys.version_info.minor}'
@@ -58,7 +58,7 @@ if sys.platform not in PLATFORM_DATA:
 data = PLATFORM_DATA[sys.platform]
 
 includes = []
-excludes = ['doctest', 'pdb', 'unittest', 'difflib']  # ssl (Needed for imgur uploading)
+excludes = ['doctest', 'pdb', 'unittest']  # ssl (Needed for imgur uploading)
 packages = ['PIL', 'PIL.ImageDraw', 'PIL.ImageGrab']
 options = {
     'build_exe': {
