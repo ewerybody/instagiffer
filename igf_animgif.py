@@ -91,36 +91,20 @@ class AnimatedGif:
         )
         logging.info(startupLog)
 
-        if not os.path.exists(os.path.dirname(self.gifOutPath)):
-            os.makedirs(os.path.dirname(self.gifOutPath))
-            if not os.path.exists(os.path.dirname(self.gifOutPath)):
-                self.FatalError(
-                    'Failed to create gif output directory: ' + os.path.dirname(self.gifOutPath)
-                )
-        if not os.path.exists(self.frameDir):
-            os.makedirs(self.frameDir)
-            if not os.path.exists(self.frameDir):
-                self.FatalError('Failed to create working directory: ' + self.frameDir)
-        if not os.path.exists(self.resizeDir):
-            os.makedirs(self.resizeDir)
-            if not os.path.exists(self.resizeDir):
-                self.FatalError('Failed to create working directory: ' + self.resizeDir)
-        if not os.path.exists(self.processedDir):
-            os.makedirs(self.processedDir)
-            if not os.path.exists(self.processedDir):
-                self.FatalError('Failed to create working directory: ' + self.processedDir)
-        if not os.path.exists(self.downloadDir):
-            os.makedirs(self.downloadDir)
-            if not os.path.exists(self.downloadDir):
-                self.FatalError('Failed to create working directory: ' + self.downloadDir)
-        if not os.path.exists(self.captureDir):
-            os.makedirs(self.captureDir)
-            if not os.path.exists(self.captureDir):
-                self.FatalError('Failed to create working directory: ' + self.captureDir)
-        if not os.path.exists(self.maskDir):
-            os.makedirs(self.maskDir)
-            if not os.path.exists(self.maskDir):
-                self.FatalError('Failed to create working directory: ' + self.maskDir)
+        for path, name in (
+            (os.path.dirname(self.gifOutPath), 'gif output'),
+            (self.frameDir, None),
+            (self.resizeDir, None),
+            (self.processedDir, None),
+            (self.downloadDir, None),
+            (self.captureDir, None),
+            (self.maskDir, None),
+        ):
+            if os.path.isdir(path):
+                continue
+            os.makedirs(path)
+            if not os.path.isdir(path):
+                self.FatalError(f'Failed to create {name or "working"} directory: {path}')
 
         self.LoadFonts()
         logging.info('4')
@@ -452,18 +436,8 @@ class AnimatedGif:
                 runCallback = self.callback
                 statBarCB = FontConfOutHandler
 
-        logging.info('1')
-        # cmdListFonts       = '"%s" -list font' % (self.conf.GetParam('paths', 'convert'))
-        cmdListFonts = '%s -list font' % (self.conf.GetParam('paths', 'convert'))
-        # logging.info("2",cmdListFonts)
+        cmdListFonts = f'{self.conf.GetParam("paths", "convert")} -list font'
         exitcode, fonts_output = subprocess.getstatusoutput(cmdListFonts)
-        # fonts_output, err = run_process(
-        #     cmdListFonts,
-        #     callback=runCallback,
-        #     returnOutput=True,
-        #     outputTranslator=statBarCB,
-        # )
-        logging.info('3')
         self.fonts = ImagemagickFont(fonts_output)
 
         return True
@@ -1086,10 +1060,10 @@ class AnimatedGif:
             try:
                 os.remove(f)
             except Exception:  # WindowsError:
-                errStr = (
-                    "Can't delete the following file:\n\n%s\n\nIs it open in another program?" % (f)
+                error_msg = (
+                    f"Can't delete the following file:\n\n{f}\n\nIs it open in another program?"
                 )
-                self.FatalError(errStr)
+                self.FatalError(error_msg)
 
     def GetProcessedImagesDir(self):
         return self.processedDir + os.sep
@@ -1114,8 +1088,8 @@ class AnimatedGif:
             try:
                 os.remove(f)
             except Exception:  # WindowsError:
-                errStr = "Can't delete %s. Is it open in another program?" % (f)
-                self.FatalError(errStr)
+                error_msg = "Can't delete %s. Is it open in another program?" % (f)
+                self.FatalError(error_msg)
 
     def GetCapturedImagesDir(self):
         return self.captureDir + os.sep
@@ -1351,7 +1325,7 @@ class AnimatedGif:
             url, sep, extra = url.partition('&list=')
 
         # Build format str
-        fmtStr = '[height<=?' + str(maxHeight) + '] '
+        fmtStr = f'"[height<=?{maxHeight}]"'
         if self.downloadQuality == 'Highest':
             fmtStr = 'bestvideo'
 
@@ -1378,30 +1352,31 @@ class AnimatedGif:
             + '"'
         )
 
-        stdout, stderr = run_process(cmdVideoDownload, self.callback, True)
+        # stdout, stderr = run_process(cmdVideoDownload, self.callback, True)
+        exitcode, stdout = subprocess.getstatusoutput(cmdVideoDownload)
 
-        if not os.path.exists(downloadFileName):
+        if not os.path.isfile(downloadFileName):
             # Video didn't download. Let's see what happened
-            errStr = 'Failed to download video\n\n'
-            for line in stderr.splitlines(True):
-                if 'ERROR' in line:
-                    if 'This video does not exist' in line:
-                        errStr += 'Video was not found.'
-                    if 'Community Guidelines' in line:
-                        errStr += 'Video removed because it broke the rules'
-                    elif 'is not a valid URL' in line:
-                        errStr += 'This is an invalid video URL'
-                    elif '10013' in line or '11001' or 'CERTIFICATE_VERIFY_FAILED' in line:
-                        errStr += 'Unable to download video. Bad URL? Is it a private video? Is your firewall blocking Instagiffer?'
-                    elif 'Signature extraction failed' in line or 'HTTP Error 403' in line:
-                        errStr += 'There appears to be copyright protection on this video. This frequently occurs with music videos. Ask the Instagiffer devs to release a new version to get around this, or use the screen capture feature.'
-                    else:
-                        errStr += line
+            error_msg = 'Failed to download video\n\n'
+            for line in stdout.splitlines(True):
+                if 'ERROR' not in line:
+                    continue
+                if 'This video does not exist' in line:
+                    error_msg += 'Video was not found.'
+                if 'Community Guidelines' in line:
+                    error_msg += 'Video removed because it broke the rules'
+                elif 'is not a valid URL' in line:
+                    error_msg += 'This is an invalid video URL'
+                elif '10013' in line or '11001' or 'CERTIFICATE_VERIFY_FAILED' in line:
+                    error_msg += 'Unable to download video. Bad URL? Is it a private video? Is your firewall blocking Instagiffer?'
+                elif 'Signature extraction failed' in line or 'HTTP Error 403' in line:
+                    error_msg += 'There appears to be copyright protection on this video. This frequently occurs with music videos. Ask the Instagiffer devs to release a new version to get around this, or use the screen capture feature.'
+                else:
+                    error_msg += line
 
             logging.error('youtube-dl failed to download video')
             logging.error(stdout)
-            logging.error(stderr)
-            self.FatalError(errStr)
+            self.FatalError(error_msg)
 
         return downloadFileName
 
@@ -2557,21 +2532,17 @@ class ImagemagickFont:
 
                 if overallStyle is not None:
                     if fontFamily not in self.fonts:
-                        self.fonts[fontFamily] = dict()
+                        self.fonts[fontFamily] = {}
                     self.fonts[fontFamily][overallStyle] = fontId
 
     def GetFontCount(self):
-        return len(list(self.fonts.keys()))
+        return len(self.fonts)
 
     def GetFamilyList(self):
-        ret = list(self.fonts.keys())
-        ret.sort()
-        return tuple(ret)
+        return tuple(sorted(self.fonts))
 
     def GetFontAttributeList(self, fontFamily):
-        ret = list(self.fonts[fontFamily].keys())
-        ret.sort(reverse=True)
-        return tuple(ret)
+        return tuple(sorted(self.fonts[fontFamily], reverse=True))
 
     def GetFontId(self, fontFamily, fontStyle):
         return self.fonts[fontFamily][fontStyle]

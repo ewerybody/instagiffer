@@ -37,7 +37,7 @@ import sys
 import igf_animgif
 import igf_common
 import igf_paths
-from igf_common import IM_A_MAC, IM_A_PC, __release__
+from igf_common import IM_A_MAC, IM_A_PC, IM_LINUX, __release__
 
 __author__ = 'Justin Todd'
 __copyright__ = 'Copyright 2013-2019, Exhale Software Inc.'

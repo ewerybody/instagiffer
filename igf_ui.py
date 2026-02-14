@@ -421,11 +421,7 @@ class GifApp:
         # s.configure("red.Horizontal.TProgressbar", foreground='#395976', background='#395976')
 
         self.progressBar = ttk.Progressbar(
-            parent,
-            orient=tkinter.HORIZONTAL,
-            maximum=100,
-            mode='determinate',
-            name='progressBar',
+            parent, orient=tkinter.HORIZONTAL, maximum=100, mode='determinate', name='progressBar'
         )  # , style="red.Horizontal.TProgressbar")
         self.progressBar.grid(
             # side=tkinter.BOTTOM, fill=tkinter.X
@@ -466,28 +462,13 @@ class GifApp:
             self.boxOpen, text='Capture Screen', command=self.OnScreenCapture
         )
         self.txtFname.grid(
-            row=rowIdx,
-            column=0,
-            columnspan=5,
-            sticky=tkinter.W,
-            padx=padding,
-            pady=padding,
+            row=rowIdx, column=0, columnspan=5, sticky=tkinter.W, padx=padding, pady=padding
         )
         self.btnFopen.grid(
-            row=rowIdx,
-            column=11,
-            columnspan=2,
-            sticky=tkinter.W,
-            padx=padding,
-            pady=padding,
+            row=rowIdx, column=11, columnspan=2, sticky=tkinter.W, padx=padding, pady=padding
         )
         self.btnScreenCap.grid(
-            row=rowIdx,
-            column=13,
-            columnspan=2,
-            sticky=tkinter.W,
-            padx=padding,
-            pady=padding,
+            row=rowIdx, column=13, columnspan=2, sticky=tkinter.W, padx=padding, pady=padding
         )
 
         #
@@ -5591,7 +5572,7 @@ class GifApp:
         return self.WaitForChildDialog(captionDlg)
 
 
-class ToolTip(object):
+class ToolTip:
     """Little yellow tool tips shown on mouse-over."""
 
     def __init__(self, widget):
