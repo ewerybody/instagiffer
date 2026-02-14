@@ -3,3 +3,4 @@
 *.log
 _ *
 /__pycache__
+/dist
