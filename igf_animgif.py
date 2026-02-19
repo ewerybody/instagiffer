@@ -120,7 +120,6 @@ class AnimatedGif:
         self.DeleteMaskImages()
         self.DeleteAudioClip()
 
-        print('12')
         # self.DeleteGifOutput()
 
         mediaLocator = self.ResolveUrlShortcutFile(mediaLocator)
@@ -385,8 +384,8 @@ class AnimatedGif:
             self.FatalError('ffmpeg not found')
         elif not os.path.exists(self.conf.GetParam('paths', 'convert')):
             self.FatalError('imagemagick convert not found')
-        elif not os.path.exists(self.conf.GetParam('paths', 'youtubedl')):
-            self.FatalError('Youtube-dl not found')
+        # elif not os.path.exists(self.conf.GetParam('paths', 'youtubedl')):
+        #     self.FatalError('Youtube-dl not found')
         # elif not os.path.exists(self.conf.GetParam('paths','gifsicle')):
         #     self.FatalError("gifsicle not found")
         elif self.videoPath is not None and not os.path.exists(self.videoPath):
@@ -1355,15 +1354,13 @@ class AnimatedGif:
         # stdout, stderr = run_process(cmdVideoDownload, self.callback, True)
         exitcode, stdout = subprocess.getstatusoutput(cmdVideoDownload)
 
-        if not os.path.isfile(downloadFileName):
+        if exitcode != 0 and not os.path.isfile(downloadFileName):
             # Video didn't download. Let's see what happened
             error_msg = 'Failed to download video\n\n'
             for line in stdout.splitlines(True):
-                if 'ERROR' not in line:
-                    continue
                 if 'This video does not exist' in line:
                     error_msg += 'Video was not found.'
-                if 'Community Guidelines' in line:
+                elif 'Community Guidelines' in line:
                     error_msg += 'Video removed because it broke the rules'
                 elif 'is not a valid URL' in line:
                     error_msg += 'This is an invalid video URL'
@@ -1371,6 +1368,12 @@ class AnimatedGif:
                     error_msg += 'Unable to download video. Bad URL? Is it a private video? Is your firewall blocking Instagiffer?'
                 elif 'Signature extraction failed' in line or 'HTTP Error 403' in line:
                     error_msg += 'There appears to be copyright protection on this video. This frequently occurs with music videos. Ask the Instagiffer devs to release a new version to get around this, or use the screen capture feature.'
+                elif line.endswith('yt-dlp: not found'):
+                    error_msg += (
+                        'The downloader app could not be found!\n'
+                        'Get it from:\nhttps://github.com/yt-dlp/yt-dlp\n'
+                        'Or on Linux do:\nsudo apt install yt-dlp\n'
+                    )
                 else:
                     error_msg += line
 
@@ -2490,7 +2493,7 @@ class ImagemagickFont:
     """Wrapper around the Imagemagick font engine."""
 
     def __init__(self, imagemagick_font_data):
-        self.fonts = dict()
+        self.fonts = {}
         fonts = re.findall(
             r'\s*Font: (.+?)\n\s*family: (.+?)\n\s*style: (.+?)\n\s*stretch: (.+?)\n\s*weight: (.+?)\n\s*glyphs: (.+?)\n',
             imagemagick_font_data,
@@ -2504,14 +2507,6 @@ class ImagemagickFont:
             fontStyle = font[2].strip()
             fontStretch = font[3].strip()
             fontWeight = font[4].strip()
-
-            # try:
-            #     fontFamily.decode('ascii')
-            #     fontId.decode('ascii')
-            #     fontFile.decode('ascii')
-            # except Exception:
-            #     logging.error('Unable to load font: ' + fontFamily)
-            #     continue
 
             # ignore stretched fonts, and styles other than italic, and weights we don't know about
             if (

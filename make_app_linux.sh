@@ -88,7 +88,6 @@ fpm -s dir -t deb \
     -a amd64 \
     -d ffmpeg \
     -d imagemagick \
-    -d yt-dlp \
     --description "Create optimized GIFs from videos, images, and screen captures" \
     --maintainer "Eric Werner <ewerybody@gmail.com>" \
     --url "https://github.com/ewerybody/instagiffer" \
