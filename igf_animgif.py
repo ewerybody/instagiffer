@@ -396,52 +396,13 @@ class AnimatedGif:
 
     def LoadFonts(self):
         logging.info('Retrieve font list...')
-
-        runCallback = None
-        statBarCB = igf_common.default_output_handler
-
-        def FontConfOutHandler(unused1, unused2, unused3):
-            return (
-                'First time running Instagiffer for Mac. Configuring fonts. This will take a few minutes...',
-                None,
-            )
-
-        # TODO: Resolve ui dependency
-        import igf_ui
-
-        if IM_A_MAC:
-            fontCacheDir = (
-                './macdeps/im/var/cache/fontconfig'  # expanduser("~") + '/.cache/fontconfig'
-            )
-
-            if not os.path.isdir(fontCacheDir):
-                igf_ui.notify_user(
-                    'First Time',
-                    'Welcome to Instagiffer for Mac! Before you can use text features, I need to build a font database. This will take a few minutes.',
-                )
-                logging.info('First run. Need to build font cache first: ' + fontCacheDir)
-                runCallback = self.callback
-                statBarCB = FontConfOutHandler
-        else:
-            fontCacheDir = '.cache/fontconfig'
-
-            if not os.path.isdir(fontCacheDir):
-                igf_ui.notify_user(
-                    'First Time',
-                    'Welcome to Instagiffer for Windows! Before you can use text features, '
-                    'I need to build a font database. This will take a few minutes.',
-                )
-                logging.info('First run. Need to build font cache first: ' + fontCacheDir)
-                runCallback = self.callback
-                statBarCB = FontConfOutHandler
-
         cmdListFonts = f'{self.conf.GetParam("paths", "convert")} -list font'
+        t0 = time.perf_counter()
         exitcode, fonts_output = subprocess.getstatusoutput(cmdListFonts)
         self.fonts = ImagemagickFont(fonts_output)
+        logging.info(f'  took {time.perf_counter() - t0:.3f}s')
 
-        return True
-
-    def GetFonts(self):
+    def GetFonts(self) -> ImagemagickFont:
         return self.fonts
 
     def SetSavePath(self, savePath):

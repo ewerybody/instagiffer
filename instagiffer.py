@@ -14,14 +14,13 @@ import sys
 import igf_animgif
 import igf_common
 import igf_paths
-from igf_common import IM_A_MAC, IM_A_PC, IM_LINUX, __release__
+from igf_common import IM_A_MAC, IM_A_PC, __release__
 
 __author__ = 'Justin Todd'
 __copyright__ = 'Copyright 2013-2019, Exhale Software Inc.'
 __maintainer__ = 'Justin Todd'
 __email__ = 'instagiffer@gmail.com'
 __status__ = 'Production'
-# If this is False, bindep output, and info-level statements will be displayed stdout
 
 
 class InstaCommandLine:
