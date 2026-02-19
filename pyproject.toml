@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "instagiffer"
-version = "1.8.1"
+version = "1.8.2"
 description = "Create optimized GIFs from videos, images, and screen captures"
 readme = "README.md"
 requires-python = ">=3.14"
-license = { text = "BSD-4-Clause" }
+license = "BSD-4-Clause"
 authors = [
     { name = "Justin Todd", email = "instagiffer@gmail.com" },
     { name = "Eric Werner (refactor)", email = "ewerybody@gmail.com" },

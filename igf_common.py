@@ -1,15 +1,14 @@
-import os
-import re
-import sys
-import time
-import shlex
+import configparser
 import locale
 import logging
+import os
+import re
+import shlex
 import subprocess
-import configparser
-
-from threading import Thread
+import sys
+import time
 from queue import Queue
+from threading import Thread
 
 __release__ = True
 IM_A_MAC = sys.platform == 'darwin'
@@ -17,12 +16,13 @@ IM_A_PC = sys.platform == 'win32'
 IM_LINUX = sys.platform == 'linux'
 ON_POSIX = 'posix' in sys.builtin_module_names
 # Only use odd-numbered minor revisions for pre-release builds
-INSTAGIFFER_VERSION = '1.8'
+INSTAGIFFER_VERSION = '1.8.2'
 # If not a pre-release set to "", else set to "pre-X"
-INSTAGIFFER_PRERELEASE = 'pre-1'
+INSTAGIFFER_PRERELEASE = ''
 __version__ = INSTAGIFFER_VERSION + INSTAGIFFER_PRERELEASE
 __changelogUrl__ = 'http://instagiffer.com/post/146636589471/instagiffer-175-macpc'
 __faqUrl__ = 'http://www.instagiffer.com/post/51787746324/frequently-asked-questions'
+DEFAULT_FONT = 'Impact'
 
 
 class InstaConfig:
@@ -338,8 +338,8 @@ def run_process(
         remainingStdout = ''
         remainingStderr = ''
         remainingStdout, remainingStderr = pipe.communicate()
-    except IOError as e:
-        logging.error('Encountered error communicating with sub-process' + str(e))
+    except OSError as error:
+        logging.error('Encountered error communicating with sub-process' + str(error))
 
     success = pipe.returncode == 0
     stdout += str(remainingStdout)
@@ -415,3 +415,16 @@ def re_scale(val, oldScale, newScale):
     NewRange = NewMax - NewMin
     NewValue = (((OldValue - OldMin) * NewRange) / OldRange) + NewMin
     return NewValue
+
+
+def get_icon_image() -> str:
+    logo_png = 'logo.png'
+    if os.path.isfile(logo_png):
+        return logo_png
+    doc_path = os.path.join('doc', 'graphics', logo_png)
+    if os.path.isfile(doc_path):
+        return doc_path
+    ico = 'instagiffer.ico'
+    if os.path.isfile(ico):
+        return ico
+    return ''
