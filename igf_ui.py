@@ -5743,4 +5743,10 @@ def start(exe_dir, cmdline_video_path):
     root = tkinter.Tk()
     app = GifApp(root, cmdline_video_path)
 
+    icon_path = igf_common.get_icon_image()
+    if icon_path:
+        icon = tkinter.PhotoImage(file=icon_path)
+        root.iconphoto(True, icon)
+
+    app = GifApp(root, cmdline_video_path)
     root.mainloop()
