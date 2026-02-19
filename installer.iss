@@ -1,7 +1,8 @@
 ; Instagiffer Installer
 
 #define MyAppName "Instagiffer"
-; #define MyAppVersion ; passed as compiler option
+#define MyAppVersion GetEnv('INNOMyAppVersion')
+#define BuildDir GetEnv('INNOBuildDir')
 #define MyAppPublisher "Justin Todd"
 #define MyAppURL "http://www.instagiffer.com"
 #define MyAppExeName "instagiffer.exe"
@@ -11,12 +12,12 @@
 AppId={{13DEF8F8-5280-4555-95A4-E815C3F9540F}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-;AppVerName={#MyAppName}-{#MyAppVersion}
+AppVerName={#MyAppName}-{#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={pf}\{#MyAppName}
+DefaultDirName={commonpf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 OutputDir=.\
 OutputBaseFilename=instagiffer-{#MyAppVersion}-setup
@@ -39,7 +40,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 ;Source: ".\dist\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: users-modify
-Source: ".\build\exe.win32-2.7\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: users-modify
+Source: "{#BuildDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: users-modify
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
@@ -50,4 +51,3 @@ Name: "{group}\Visit www.instagiffer.com"; Filename: "http://www.instagiffer.com
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 ;[Run]
 ;Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-

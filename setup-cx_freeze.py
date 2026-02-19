@@ -35,7 +35,7 @@ PLATFORM_DATA = {
         'icon': 'doc/graphics/logo.png',
     },
     'win32': {
-        'files': ['windeps/', 'uninstall.ico', 'instagiffer.ico', 'instagiffer.conf'],
+        'files': ['windeps/', 'uninstall.ico', 'instagiffer.ico', 'instagiffer.conf', 'doc/graphics/logo.png'],
         'base': 'gui',
         'build_path': os.path.join(BUILD_ROOT, 'Win32'),  # TODO: check!
         'icon': f'{NAME}.ico',
