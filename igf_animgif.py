@@ -2472,7 +2472,7 @@ class ImagemagickFont:
             # ignore stretched fonts, and styles other than italic, and weights we don't know about
             if (
                 fontFamily != 'unknown'
-                and fontStretch == 'Normal'
+                and fontStretch in ('Normal', 'Condensed')
                 and (fontStyle == 'Italic' or fontStyle == 'Normal')
                 and (fontWeight == '400' or fontWeight == '700')
             ):
@@ -2486,10 +2486,10 @@ class ImagemagickFont:
                 elif fontStyle == 'Italic' and fontWeight == '700':
                     overallStyle = 'Bold Italic'
 
-                if overallStyle is not None:
-                    if fontFamily not in self.fonts:
-                        self.fonts[fontFamily] = {}
-                    self.fonts[fontFamily][overallStyle] = fontId
+                if overallStyle is None:
+                    continue
+
+                self.fonts.setdefault(fontFamily, {})[overallStyle] = fontId
 
     def GetFontCount(self):
         return len(self.fonts)
@@ -2508,8 +2508,8 @@ class ImagemagickFont:
 
         if len(userChoice) and userChoice in fontFamilyList:
             return fontFamilyList.index(userChoice)
-        elif 'Impact' in fontFamilyList:
-            return fontFamilyList.index('Impact')
+        elif igf_common.DEFAULT_FONT in fontFamilyList:
+            return fontFamilyList.index(igf_common.DEFAULT_FONT)
         elif 'Arial Rounded MT Bold' in fontFamilyList:
             return fontFamilyList.index('Arial Rounded MT Bold')
         elif 'Arial' in fontFamilyList:
