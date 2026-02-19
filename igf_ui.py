@@ -207,9 +207,6 @@ class GifApp:
         else:
             self.parent.title('Instagiffer - DEBUG MODE *******')
 
-        if IM_A_PC:
-            self.parent.wm_iconbitmap('instagiffer.ico')
-
         frame = tkinter.Frame(parent)
         frame.grid()
         self.mainFrame = frame
@@ -1153,6 +1150,8 @@ class GifApp:
         self._screencapXgbl = 0
         self._screencapYgbl = 0
 
+        self.txtFname.focus_set()
+
     def CreateAppDataFolder(self):
         self.tempDir = igf_paths.create_working_dir(self.conf)
 
@@ -2003,7 +2002,7 @@ class GifApp:
 
     def Alert(self, title, message):
         logging.info('Alert: title: [%s], message: [%s]' % (title, message.strip()))
-        tkinter.messagebox.showinfo(title, message)
+        show_copiable_message(self.parent, title, message)
 
     def OnRClickPopup(self, event):
         def RClickPaste(event):
@@ -2935,12 +2934,13 @@ class GifApp:
         self.guiBusy = True
         return popupWindow
 
-    def ReModalDialog(self, dlg):
+    def ReModalDialog(self, dlg, parent):
         dlg.update()
         dlg.deiconify()
         dlg.lift()
         dlg.focus()
-        dlg.grab_set()
+        dlg.transient(parent)
+        dlg.focus_set()
         # self.guiBusy = True
 
     def WaitForChildDialog(self, dlg, dlgGeometry=None):
@@ -2954,7 +2954,7 @@ class GifApp:
         height = dlg.winfo_height()
         x = self.mainFrame.winfo_rootx()
         y = self.mainFrame.winfo_rooty()
-        geom = '{0}x{1}+{2}+{3}'.format(width, height, x, y)
+        geom = f'{width}x{height}+{x}+{y}'
 
         if dlgGeometry == 'center':
             self.CenterWindow(dlg)
@@ -2964,10 +2964,17 @@ class GifApp:
         if dlgGeometry is not None and len(dlgGeometry) and dlgGeometry != 'center':
             geom = dlgGeometry
 
-        # Set window geometry
-        dlg.geometry(geom)
+        try:
+            # Set window geometry
+            dlg.geometry(geom)
+        except tkinter.TclError as error:
+            logging.info(f'Could not set geometry {geom}!\n{error}')
+            dlg.geometry('default')
+
         # Send mouse and key events to child window
-        dlg.grab_set()
+        # dlg.grab_set()
+        dlg.transient(self.parent)
+        dlg.focus_set()
 
         # Block until window is destroyed
         self.parent.wait_window(dlg)
@@ -3035,8 +3042,9 @@ class GifApp:
         return self.WaitForChildDialog(popupWindow)
 
     def OnCaptionSelect(self, *args):
-        if not self.guiBusy:
-            self.OnCaptionConfig()
+        if self.guiBusy:
+            return
+        self.OnCaptionConfig()
 
     def OnScreenCapture(self):
         resizable = True
@@ -4959,7 +4967,7 @@ class GifApp:
             hadAudio = self.HaveAudioPath()
             ret = self.OnEditAudioSettings(dlg)
 
-            self.ReModalDialog(dlg)
+            self.ReModalDialog(dlg, self.parent)
 
             if self.HaveAudioPath():
                 if chkSound.cget('state') == 'disabled':
@@ -4976,7 +4984,7 @@ class GifApp:
             hadMask = self.HaveMask()
             ret = self.OnEditMask(dlg)
 
-            self.ReModalDialog(dlg)
+            self.ReModalDialog(dlg, self.parent)
 
             if self.HaveMask():
                 if chkCinemagraph.cget('state') == 'disabled':
@@ -5042,13 +5050,25 @@ class GifApp:
             'Bottom Right',
         )
         fonts = self.gif.GetFonts()
+
         isEdit = False
 
-        logging.info('Font count: %d' % (fonts.GetFontCount()))
+        logging.info(f'Font count: {fonts.GetFontCount()}')
 
         if fonts.GetFontCount() == 0:
             tkinter.messagebox.showinfo('Font Issue', "I wasn't able to find any fonts :(")
             return False
+
+        if igf_common.DEFAULT_FONT not in fonts.fonts and not self.conf.GetParamBool(
+            'captiondefaults', 'font_missing_notified'
+        ):
+            show_copiable_message(
+                self.parent,
+                f'No {igf_common.DEFAULT_FONT}?!?!',
+                f'We could not find the iconic "{igf_common.DEFAULT_FONT}" meme font :(\n'
+                'If you badly need it try getting it via:\nsudo apt install ttf-mscorefonts-installer',
+            )
+            self.conf.SetParamBool('captiondefaults', 'font_missing_notified', True)
 
         # Default form values
         if len(self.OnCaptionConfigDefaults) == 0:
@@ -5716,6 +5736,33 @@ def tk_error_catcher(self, *args):
     # self.quit()
 
 
+def show_copiable_message(parent, title, message):
+    dialog = tkinter.Toplevel(parent)
+    dialog.title(title)
+    dialog.resizable(False, False)
+
+    text = tkinter.Text(
+        dialog,
+        wrap='word',
+        width=60,
+        height=message.count('\n') + 3,
+        padx=10,
+        pady=10,
+        relief='flat',
+        bg=dialog.cget('bg'),
+        font=('sans-serif', 14),
+    )
+    text.insert('1.0', message)
+    text.config(state='disabled')  # readonly but still selectable
+    text.pack(padx=10, pady=10)
+
+    tkinter.Button(dialog, text='OK', command=dialog.destroy).pack(pady=(0, 10))
+
+    dialog.transient(parent)
+    dialog.focus_set()
+    dialog.wait_window()
+
+
 def start(exe_dir, cmdline_video_path):
     # Start the app.  Gather some diagnostic information about this machine to help with bug reporting
     logging.info('Starting Instagiffer version ' + __version__ + '...')
@@ -5723,13 +5770,6 @@ def start(exe_dir, cmdline_video_path):
     tkinter.Tk.report_callback_exception = tk_error_catcher
 
     import platform
-
-    if IM_A_PC:
-        logging.info('OS: ' + platform.platform())
-    elif IM_A_MAC:
-        logging.info('OSX Version: ' + str(platform.mac_ver()))
-    else:
-        logging.info('Unknown OS')
 
     logging.info(sys.version_info)
     logging.info('App: [' + exe_dir + ']. Home: [' + os.path.expanduser('~') + ']')
@@ -5741,7 +5781,6 @@ def start(exe_dir, cmdline_video_path):
     )
 
     root = tkinter.Tk()
-    app = GifApp(root, cmdline_video_path)
 
     icon_path = igf_common.get_icon_image()
     if icon_path:
