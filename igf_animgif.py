@@ -1367,7 +1367,7 @@ class AnimatedGif:
                     error_msg += 'Video removed because it broke the rules'
                 elif 'is not a valid URL' in line:
                     error_msg += 'This is an invalid video URL'
-                elif '10013' in line or '11001' or 'CERTIFICATE_VERIFY_FAILED' in line:
+                elif any(x in line for x in ('10013', '11001', 'CERTIFICATE_VERIFY_FAILED')):
                     error_msg += 'Unable to download video. Bad URL? Is it a private video? Is your firewall blocking Instagiffer?'
                 elif 'Signature extraction failed' in line or 'HTTP Error 403' in line:
                     error_msg += 'There appears to be copyright protection on this video. This frequently occurs with music videos. Ask the Instagiffer devs to release a new version to get around this, or use the screen capture feature.'
