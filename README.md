@@ -2,7 +2,7 @@ Instagiffer
 ===========
 
 **Please Note** this main branch is currently only to make things "work" again. 
-Future development will happen in the instagiffer2.0 branch!
+Future development will happen in the refactor2.0 branch!
 
 
 ![Logo](doc/graphics/app_icon.png "Instagiffer Logo")
