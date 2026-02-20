@@ -1,6 +1,10 @@
 Instagiffer
 ===========
 
+**Please Note** this main branch is currently only to make things "work" again. 
+Future development will happen in the instagiffer2.0 branch!
+
+
 ![Logo](doc/graphics/app_icon.png "Instagiffer Logo")
 
 Whether you pronounce it GIF, or GIF, Instagiffer is the perfect tool for creating the best reaction moments to any situation. Sometimes, only a GIF will do in a conversation, and can say so much by saying so little. If you find yourself struggling to find the perfect GIF, look no more—just make your own. It’s easy. Promise.
@@ -15,16 +19,26 @@ The Instagiffer binary is generated using py2app (Mac OS) and cxFreeze (Windows)
 
 # Setting Up Your Development Environment #
 
+This fork is using uv for package management which eases most of the platform friction already. From: https://docs.astral.sh/uv/#installation
+
+for Linux and Apple systems:
+```
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+for Windows:
+```
+https://astral.sh/uv/install.ps1
+```
+
+Install it, make sure it's available system wide, clone or fork the project, go into its root and:
+```
+uv sync
+```
+
 ## Windows ##
 
 The following prerequisites are required to do a Windows build:
- * Python (3.14)
- * uv
- * tk
- * Pillow (latest)
- * cx_Freeze (latest)
  * Inno Setup (Latest)
- * [PyWin32 (2.19)](https://sourceforge.net/projects/pywin32/files/pywin32/Build%20219/pywin32-219.win32-py2.7.exe/download)
  * Update Instagiffer\windeps
    * [Latest FFMpeg 32-bit static build](https://ffmpeg.zeranoe.com/builds/)
    * [Latest convert.exe and mogrify.exe from Imagemagick Portable x86 zip](http://www.imagemagick.org/script/binary-releases.php)
@@ -36,8 +50,6 @@ Macs require a little more work:
  * A Mac or Mac VM
  * Github Desktop - Download and clone instagiffer repo
  * Python tools requirements:
-   * pip: sudo easy_install pip
-   * PIL: sudo pip install pillow
    * py2app: sudo pip install -U py2app
  * Update instagiffer\macdeps with latest versions
    * ffmpeg: http://www.ffmpegmac.net
@@ -104,6 +116,11 @@ Before you release, double-check:
  * Version numbers updated?
  * Help links work?
  * Test everything on vanilla Mac/Windows VM?
+
+## Linux ##
+
+* Run make_app_linux.sh 
+
 
 ## Windows ##
 
