@@ -11,7 +11,7 @@ requires-python = ">=3.14"
 license = {text = "BSD-3-Clause"}
 authors = [
     {name = "Justin Todd", email = "instagiffer@gmail.com"},
-    {name = "Eric Werybody (refactor)", email = "ewerybody@gmail.com"},
+    {name = "Eric Werner (refactor)", email = "ewerybody@gmail.com"},
 ]
 keywords = ["gif", "video", "animation", "screen-capture", "converter"]
 classifiers = [
@@ -26,20 +26,12 @@ classifiers = [
 dependencies = [
     "pyside6>=6.8",
     "pillow>=10.0",
-    "yt-dlp>=2024.0",
-    "pydantic>=2.0",  # For config validation
-    "pydantic-settings>=2.0",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
-    "pytest-mock>=3.0",
-    "pytest-asyncio>=0.23",
-    "black>=23.0",
-    "ruff>=0.1.0",
-    "mypy>=1.7",
 ]
 
 [project.scripts]
@@ -50,6 +42,9 @@ instagiffer-cli = "instagiffer.cli:main"
 Homepage = "https://github.com/ewerybody/instagiffer"
 Repository = "https://github.com/ewerybody/instagiffer"
 "Bug Tracker" = "https://github.com/ewerybody/instagiffer/issues"
+
+[tool.uv]
+package = false
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -81,11 +76,6 @@ exclude_lines = [
     "@abstract",
 ]
 
-[tool.black]
-line-length = 100
-target-version = ["py314"]
-include = '\.pyi?$'
-
 [tool.ruff]
 line-length = 100
 target-version = "py314"
@@ -105,16 +95,3 @@ ignore = [
 
 [tool.ruff.isort]
 known-first-party = ["instagiffer"]
-
-[tool.mypy]
-python_version = "3.14"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-check_untyped_defs = true
-no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_no_return = true
-strict_equality = true
