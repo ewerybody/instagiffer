@@ -1,5 +1,9 @@
 # Custom Dictionary Words
 addopts
+animgif
+cinemagraph
+Giffing
+gifsicle
 instagiffer
 pycodestyle
 pyflakes

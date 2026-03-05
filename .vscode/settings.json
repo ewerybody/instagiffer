@@ -19,8 +19,16 @@
         "**/node_modules": true,
         "**/bower_components": true,
         "**/*.code-search": true,
-        ".pytest_cache": true,
-        ".venv": true,
-        "build": true,
-    }
+        "**/*.venv": true
+    },
+    "ruff.configuration": {
+        "format": {
+            "quote-style": "single"
+        }
+    },
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 }
