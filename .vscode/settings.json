@@ -19,7 +19,8 @@
         "**/node_modules": true,
         "**/bower_components": true,
         "**/*.code-search": true,
-        "**/*.venv": true
+        "**/*.venv": true,
+        "**/_ */*": true
     },
     "ruff.configuration": {
         "format": {
@@ -30,5 +31,6 @@
         "tests"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "python.envFile": "${workspaceFolder}/.vscode/.env"
 }
