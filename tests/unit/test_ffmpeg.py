@@ -7,6 +7,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from instagiffer.external.ffmpeg import (
+    FRAME_PATTERN,
     FFmpegError,
     FFmpegNotFoundError,
     FFmpegWrapper,
@@ -17,10 +18,6 @@ from instagiffer.external.ffmpeg import (
     _parse_fps,
     _parse_resolution,
 )
-
-# ---------------------------------------------------------------------------
-# Realistic ffmpeg -i output to use across tests
-# ---------------------------------------------------------------------------
 
 TYPICAL_OUTPUT = """
 ffmpeg version 6.1 Copyright (c) 2000-2023 the FFmpeg developers
@@ -217,16 +214,16 @@ class TestExtractFrames:
         def fake_popen(cmd, **kwargs):
             # Actually create the output files when Popen is called
             out_dir.mkdir(parents=True, exist_ok=True)
-            (out_dir / 'image0001.png').touch()
-            (out_dir / 'image0002.png').touch()
+            (out_dir / (FRAME_PATTERN % 1)).touch()
+            (out_dir / (FRAME_PATTERN % 2)).touch()
             return self._make_mock_process([])
 
         with patch('subprocess.Popen', side_effect=fake_popen):
             frames = wrapper.extract_frames(video, out_dir, fps=10)
 
         assert len(frames) == 2
-        assert frames[0].name == 'image0001.png'
-        assert frames[1].name == 'image0002.png'
+        assert frames[0].name == FRAME_PATTERN % 1
+        assert frames[1].name == FRAME_PATTERN % 2
 
     def test_creates_output_dir(self, wrapper, tmp_path):
         video = tmp_path / 'clip.mp4'
@@ -235,7 +232,7 @@ class TestExtractFrames:
 
         def fake_popen(cmd, **kwargs):
             out_dir.mkdir(parents=True, exist_ok=True)
-            (out_dir / 'image0001.png').touch()
+            (out_dir / (FRAME_PATTERN % 1)).touch()
             return self._make_mock_process([])
 
         with patch('subprocess.Popen', side_effect=fake_popen):
@@ -252,7 +249,7 @@ class TestExtractFrames:
         def fake_popen(cmd, **kwargs):
             captured_cmd.extend(cmd)
             out_dir.mkdir(parents=True, exist_ok=True)
-            (out_dir / 'image0001.png').touch()
+            (out_dir / (FRAME_PATTERN % 1)).touch()
             return self._make_mock_process([])
 
         with patch('subprocess.Popen', side_effect=fake_popen):
@@ -271,7 +268,7 @@ class TestExtractFrames:
         def fake_popen(cmd, **kwargs):
             captured_cmd.extend(cmd)
             out_dir.mkdir(parents=True, exist_ok=True)
-            (out_dir / 'image0001.png').touch()
+            (out_dir / (FRAME_PATTERN % 1)).touch()
             return self._make_mock_process([])
 
         with patch('subprocess.Popen', side_effect=fake_popen):
@@ -290,7 +287,7 @@ class TestExtractFrames:
         def fake_popen(cmd, **kwargs):
             captured_cmd.extend(cmd)
             out_dir.mkdir(parents=True, exist_ok=True)
-            (out_dir / 'image0001.png').touch()
+            (out_dir / (FRAME_PATTERN % 1)).touch()
             return self._make_mock_process([])
 
         with patch('subprocess.Popen', side_effect=fake_popen):
@@ -306,7 +303,7 @@ class TestExtractFrames:
 
         def fake_popen(cmd, **kwargs):
             out_dir.mkdir(parents=True, exist_ok=True)
-            (out_dir / 'image0001.png').touch()
+            (out_dir / (FRAME_PATTERN % 1)).touch()
             return self._make_mock_process(
                 [
                     'frame=  5 fps= 0 q=-1.0 size=N/A time=00:00:02.50 bitrate=N/A\n',
@@ -316,11 +313,7 @@ class TestExtractFrames:
 
         with patch('subprocess.Popen', side_effect=fake_popen):
             wrapper.extract_frames(
-                video,
-                out_dir,
-                fps=10,
-                duration=5.0,
-                progress_callback=progress_values.append,
+                video, out_dir, fps=10, duration=5.0, progress_callback=progress_values.append
             )
 
         # Progress values + final 1.0
@@ -359,13 +352,13 @@ class TestExtractFrames:
             out_dir.mkdir(parents=True, exist_ok=True)
             # Create in reverse order to verify sorting
             for i in [3, 1, 2]:
-                (out_dir / f'image{i:04d}.png').touch()
+                (out_dir / (FRAME_PATTERN % i)).touch()
             return self._make_mock_process([])
 
         with patch('subprocess.Popen', side_effect=fake_popen):
             frames = wrapper.extract_frames(video, out_dir, fps=10)
 
-        assert [f.name for f in frames] == ['image0001.png', 'image0002.png', 'image0003.png']
+        assert [f.name for f in frames] == [FRAME_PATTERN % i for i in [1, 2, 3]]
 
 
 if __name__ == '__main__':

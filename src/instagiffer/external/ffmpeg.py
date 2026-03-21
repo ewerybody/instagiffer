@@ -15,6 +15,7 @@ log = logging.getLogger(__name__)
 # Output frame filename pattern - 1-indexed, zero-padded to 4 digits
 FRAME_PATTERN = 'image%04d.png'
 FRAME_GLOB = 'image*.png'
+FILE_INPUT_ERROR = 'Error opening input file '
 
 
 class FFmpegError(Exception):
@@ -87,16 +88,19 @@ class FFmpegWrapper:
         side-rotation (90°/270° → swap width and height).
         """
         video_path = Path(video_path)
-        if not video_path.exists():
+        if not video_path.is_file():
             raise FileNotFoundError(f'Video not found: {video_path}')
 
         # ffmpeg writes stream info to stderr even when it "fails" (exit 1 is normal)
         result = subprocess.run(
-            [str(self.ffmpeg), '-i', str(video_path)],
+            [self.ffmpeg, '-hide_banner', '-i', video_path],
             capture_output=True,
             text=True,
         )
         output = result.stderr
+
+        if FILE_INPUT_ERROR in output:
+            raise FFmpegError(f'{FILE_INPUT_ERROR} {video_path}\n Is this a proper video file?')
 
         width, height = _parse_resolution(output)
         duration_sec = _parse_duration(output)
@@ -258,4 +262,5 @@ if __name__ == '__main__':
     import pytest
 
     from tests.unit import test_ffmpeg
+
     pytest.main([test_ffmpeg.__file__, '-v'])
