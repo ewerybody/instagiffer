@@ -8,16 +8,16 @@ from pathlib import Path
 
 from PySide6 import QtCore, QtWidgets
 
-from instagiffer.external.ffmpeg import FFmpegNotFoundError, FFmpegWrapper
+from instagiffer.external.ffmpeg import FFmpegError, FFmpegNotFoundError, FFmpegWrapper
 from instagiffer.ui.widget.path import DirRow, FileRow
 
 
 class ExtractionWorker(QtCore.QThread):
     """Runs frame extraction off the main thread."""
 
-    progress = QtCore.Signal(int)   # 0-100
-    finished = QtCore.Signal(int)   # frame count on success
-    error = QtCore.Signal(str)      # error message on failure
+    progress = QtCore.Signal(int)  # 0-100
+    finished = QtCore.Signal(int)  # frame count on success
+    error = QtCore.Signal(str)  # error message on failure
 
     def __init__(
         self,
@@ -71,6 +71,7 @@ class ExtractionDemo(QtWidgets.QMainWindow):
             file_filter='Videos (*.mp4 *.mkv *.avi *.mov *.webm);;All files (*)',
             parent=self,
         )
+        self.video_row.path_changed.connect(self._get_video_info)
 
         root.addWidget(self.ffmpeg_row)
         root.addWidget(self.temp_row)
@@ -168,6 +169,24 @@ class ExtractionDemo(QtWidgets.QMainWindow):
         self._log(f'ERROR: {message}')
         QtWidgets.QMessageBox.critical(self, 'Extraction failed', message)
         self._set_busy(False)
+
+    def _get_video_info(self, path):
+        video_path = self.video_row.path
+        if not video_path.is_file():
+            return
+
+        try:
+            ffmpg = FFmpegWrapper(self.ffmpeg_row.path)
+        except FFmpegNotFoundError as error:
+            self._log(f'ERROR: {error}')
+            return
+
+        try:
+            nfo = ffmpg.get_video_info(video_path)
+        except FFmpegError as error:
+            self._log(f'ERROR: {error}')
+            return
+        self._log(str(nfo))
 
 
 if __name__ == '__main__':
